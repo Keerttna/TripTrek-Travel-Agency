@@ -4,7 +4,6 @@
         "TripTrek Agency/src"
     ],
     "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "d:\\Projects\\Java External Libraries\\jmf-2.1.1e.jar"
+        "lib/**/*.jar"
     ]
 }
