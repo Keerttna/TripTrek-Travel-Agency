@@ -4,6 +4,7 @@
         "TripTrek Agency/src"
     ],
     "java.project.referencedLibraries": [
-        "lib/**/*.jar"
+        "lib/**/*.jar",
+        "d:\\Projects\\Java External Libraries\\mysql-connector-java-8.0.28.jar"
     ]
 }
