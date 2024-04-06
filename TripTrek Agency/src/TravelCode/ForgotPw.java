@@ -1,22 +1,21 @@
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
-//import java.sql.PreparedStatement;
-//import java.sql.ResultSet;
-
 import javax.swing.border.*;
+import java.sql.*;
 
-public class Signup extends JFrame implements ActionListener {
+import java.awt.event.*;
+
+public class ForgotPw extends JFrame implements ActionListener {
 
     private JPanel contentPane;
     private JTextField nameField;
     private JTextField usernameField;
-    private JTextField passwordField;
     private JComboBox<String> securityQuestions;
     private JTextField securityAnsField;
-    private JButton createBt, backBt;
+    private JButton submitBt, backBt;
 
-    public Signup() {
+    public ForgotPw() {
+
         setBounds(600, 250, 700, 406);
         setTitle("TripTrek Agency");
         contentPane = new JPanel();
@@ -39,25 +38,19 @@ public class Signup extends JFrame implements ActionListener {
         userLabel.setBounds(99, 123, 92, 26);
         contentPane.add(userLabel);
 
-        JLabel passwordLabel = new JLabel("Password :");
-        passwordLabel.setForeground(Color.DARK_GRAY);
-        passwordLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        passwordLabel.setBounds(99, 160, 92, 26);
-        contentPane.add(passwordLabel);
-
         JLabel securityQuestionLabel = new JLabel("Security Question :");
         securityQuestionLabel.setForeground(Color.DARK_GRAY);
         securityQuestionLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        securityQuestionLabel.setBounds(99, 197, 140, 26);
+        securityQuestionLabel.setBounds(99, 160, 150, 26);
         contentPane.add(securityQuestionLabel);
 
         JLabel answerLabel = new JLabel("Answer :");
         answerLabel.setForeground(Color.DARK_GRAY);
         answerLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        answerLabel.setBounds(99, 234, 92, 26);
+        answerLabel.setBounds(99, 197, 92, 26);
         contentPane.add(answerLabel);
 
-        ImageIcon signUpIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/signUpIcon.png"));
+        ImageIcon signUpIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/forgotPwIcon.png"));
         Image signUpImg = signUpIcon.getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT);
         ImageIcon img = new ImageIcon(signUpImg);
 
@@ -75,42 +68,37 @@ public class Signup extends JFrame implements ActionListener {
         usernameField.setBounds(265, 128, 170, 20);
         contentPane.add(usernameField);
 
-        passwordField = new JPasswordField();
-        passwordField.setColumns(10);
-        passwordField.setBounds(265, 165, 170, 20);
-        contentPane.add(passwordField);
-
         // Add a dropdown menu for security questions
         String[] questions = { "What is your pet name?", "What is your lucky number?",
                 "What is your favorite book?" };
         securityQuestions = new JComboBox<>(questions);
-        securityQuestions.setBounds(265, 202, 170, 20);
+        securityQuestions.setBounds(265, 165, 170, 20);
         contentPane.add(securityQuestions);
 
         securityAnsField = new JTextField();
         securityAnsField.setColumns(10);
-        securityAnsField.setBounds(265, 239, 170, 20);
+        securityAnsField.setBounds(265, 204, 170, 20);
         contentPane.add(securityAnsField);
 
-        createBt = new JButton("Create");
-        createBt.addActionListener(this);
-        createBt.setFont(new Font("Tahoma", Font.BOLD, 13));
-        createBt.setBounds(140, 289, 100, 30);
-        createBt.setBackground(Color.BLACK);
-        createBt.setForeground(Color.WHITE);
-        contentPane.add(createBt);
+        submitBt = new JButton("Submit");
+        submitBt.addActionListener(this);
+        submitBt.setFont(new Font("Tahoma", Font.BOLD, 13));
+        submitBt.setBounds(140, 259, 100, 30);
+        submitBt.setBackground(Color.BLACK);
+        submitBt.setForeground(Color.WHITE);
+        contentPane.add(submitBt);
 
         backBt = new JButton("Back");
         backBt.addActionListener(this);
         backBt.setFont(new Font("Tahoma", Font.BOLD, 13));
-        backBt.setBounds(300, 289, 100, 30);
+        backBt.setBounds(300, 259, 100, 30);
         backBt.setBackground(Color.BLACK);
         backBt.setForeground(Color.WHITE);
         contentPane.add(backBt);
 
         JPanel panel = new JPanel();
         panel.setForeground(new Color(34, 139, 34));
-        panel.setBorder(new TitledBorder(new LineBorder(new Color(128, 128, 0), 2), "Create new Account",
+        panel.setBorder(new TitledBorder(new LineBorder(new Color(128, 128, 0), 2), "Forgot Password?",
                 TitledBorder.LEADING, TitledBorder.TOP, null, new Color(34, 139, 34)));
         panel.setBounds(31, 30, 640, 310);
         panel.setBackground(Color.WHITE);
@@ -119,15 +107,14 @@ public class Signup extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == createBt) {
+    public void actionPerformed(ActionEvent E) {
+        if (E.getSource() == submitBt) {
             String name = nameField.getText();
             String username = usernameField.getText();
-            String password = passwordField.getText();
             String selectedQuestion = (String) securityQuestions.getSelectedItem();
-            String securityAns = securityAnsField.getText();
+            String enteredAns = securityAnsField.getText();
 
-            if (name.equals("") || username.equals("") || password.equals("") || securityAns.equals("")) {
+            if (name.equals("") || username.equals("") || enteredAns.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
                 return;
             }
@@ -136,29 +123,36 @@ public class Signup extends JFrame implements ActionListener {
             try {
                 Connectivity c = new Connectivity();
 
-                // Check if the username already exists
-                String check = "select * from Account where username = '" + username + "'";
-                c.s.executeQuery(check);
-                if (c.s.getResultSet().next()) {
-                    JOptionPane.showMessageDialog(null, "Username already exists!");
-                    return;
+                // Check if username and password matches
+                String query = "SELECT * FROM Account WHERE username = '" + username + "' ";
+                ResultSet checkUser = c.s.executeQuery(query);
+
+                if (checkUser.next()) {
+                    String storedQuestion = checkUser.getString("security_question");
+                    String storedAns = checkUser.getString("security_answer");
+                    if (selectedQuestion.equals(storedQuestion) && enteredAns.equals(storedAns)) {
+                        this.setVisible(false);
+                        String updatePw = JOptionPane.showInputDialog("Enter new password");
+
+                        // Update the password
+                        String updateQuery = "UPDATE Account SET password = '" + updatePw + "' WHERE username = '"
+                                + username + "'";
+                        c.s.executeUpdate(updateQuery);
+
+                        JOptionPane.showMessageDialog(null, "Password Update Successful");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Wrong answer!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
                 } else {
-                    String q = "insert into Account values('" + name + "','" + username + "','" + password + "','"
-                            + selectedQuestion + "','" + securityAns + "')";
-
-                    c.s.executeUpdate(q);
-
-                    JOptionPane.showMessageDialog(null, "Account Created Successfully!");
-
-                    this.setVisible(false);
-                    new Login();
+                    JOptionPane.showMessageDialog(null, "Invalid Username");
                 }
 
-            } catch (Exception E) {
-                System.out.println("ERROR: " + E.getMessage());
+            } catch (Exception e) {
+                System.out.println("ERROR: " + e.getMessage());
             }
 
-        } else if (e.getSource() == backBt) {
+        } else if (E.getSource() == backBt) {
             this.setVisible(false);
             new Login();
         }
@@ -166,6 +160,7 @@ public class Signup extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new Signup();
+        new ForgotPw();
     }
+
 }
