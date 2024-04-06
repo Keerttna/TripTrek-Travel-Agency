@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
+import java.util.Arrays;
 
 public class Login extends JFrame implements ActionListener {
     JLabel welcome, userName, password;
@@ -84,6 +85,7 @@ public class Login extends JFrame implements ActionListener {
         forgotBt.setForeground(Color.BLACK);
         forgotBt.setBackground(Color.white);
         forgotBt.setBounds(511, 440, 265, 30);
+        forgotBt.addActionListener(this);
         add(forgotBt);
 
         // Add background
@@ -109,12 +111,17 @@ public class Login extends JFrame implements ActionListener {
                     ResultSet checkUser = c.s.executeQuery(query);
 
                     if (checkUser.next()) {
-                        if (checkUser.getString("password").equals(passwordField.getText())) {
+                        String storedPassword = checkUser.getString("password");
+                        char[] enteredPasswordChars = passwordField.getPassword();
+                        String enteredPassword = new String(enteredPasswordChars);
+                        if (storedPassword.equals(enteredPassword)) {
                             this.setVisible(false);
                             JOptionPane.showMessageDialog(null, "Login Successful");
                         } else {
-                            JOptionPane.showMessageDialog(null, "Invalid Password");
+                            JOptionPane.showMessageDialog(null, "Invalid Password", "Error", JOptionPane.ERROR_MESSAGE);
                         }
+
+                        Arrays.fill(enteredPasswordChars, ' ');
                     } else {
                         JOptionPane.showMessageDialog(null, "Invalid Username");
                     }
@@ -127,6 +134,9 @@ public class Login extends JFrame implements ActionListener {
                 userField.setText("");
                 passwordField.setText("");
 
+            } else if (e.getSource() == forgotBt) {
+                this.setVisible(false);
+                new ForgotPw();
             } else {
                 this.setVisible(false);
                 new Signup();
