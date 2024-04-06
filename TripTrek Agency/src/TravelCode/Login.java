@@ -9,7 +9,7 @@ public class Login extends JFrame implements ActionListener {
     JLabel welcome, userName, password;
     JTextField userField;
     JPasswordField passwordField;
-    JButton login, signup, clear;
+    JButton loginBt, signupBt, clearBt, forgotBt;
 
     Login() {
 
@@ -52,36 +52,43 @@ public class Login extends JFrame implements ActionListener {
         add(passwordField);
 
         // Login button
-        login = new JButton("Login");
-        login.setFont(new Font("Georgia", Font.PLAIN, 20));
-        login.setForeground(Color.BLACK);
-        login.setBackground(Color.white);
-        login.setBounds(520, 340, 100, 30);
-        login.addActionListener(this);
-        add(login);
+        loginBt = new JButton("Login");
+        loginBt.setFont(new Font("Georgia", Font.PLAIN, 20));
+        loginBt.setForeground(Color.BLACK);
+        loginBt.setBackground(Color.white);
+        loginBt.setBounds(520, 340, 100, 30);
+        loginBt.addActionListener(this);
+        add(loginBt);
 
         // Clear button
-        clear = new JButton("Clear");
-        clear.setFont(new Font("Georgia", Font.PLAIN, 20));
-        clear.setForeground(Color.BLACK);
-        clear.setBackground(Color.white);
-        clear.setBounds(670, 340, 100, 30);
-        clear.addActionListener(this);
-        add(clear);
+        clearBt = new JButton("Clear");
+        clearBt.setFont(new Font("Georgia", Font.PLAIN, 20));
+        clearBt.setForeground(Color.BLACK);
+        clearBt.setBackground(Color.white);
+        clearBt.setBounds(670, 340, 100, 30);
+        clearBt.addActionListener(this);
+        add(clearBt);
 
         // SignUp button
-        signup = new JButton("Sign Up");
-        signup.setFont(new Font("Georgia", Font.PLAIN, 20));
-        signup.setForeground(Color.BLACK);
-        signup.setBackground(Color.white);
-        signup.setBounds(511, 390, 265, 30);
-        signup.addActionListener(this);
-        add(signup);
+        signupBt = new JButton("Sign Up");
+        signupBt.setFont(new Font("Georgia", Font.PLAIN, 20));
+        signupBt.setForeground(Color.BLACK);
+        signupBt.setBackground(Color.white);
+        signupBt.setBounds(511, 390, 265, 30);
+        signupBt.addActionListener(this);
+        add(signupBt);
+
+        // Add forgot password button
+        forgotBt = new JButton("Forgot Password?");
+        forgotBt.setFont(new Font("Georgia", Font.PLAIN, 20));
+        forgotBt.setForeground(Color.BLACK);
+        forgotBt.setBackground(Color.white);
+        forgotBt.setBounds(511, 440, 265, 30);
+        add(forgotBt);
 
         // Add background
         ImageIcon bgImgIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/LoginBg.gif"));
         JLabel bgLabel = new JLabel(bgImgIcon);
-        // bgLabel.setBounds(getBounds());
         bgLabel.setBounds(0, 0, 1280, 720);
 
         add(bgLabel);
@@ -93,15 +100,16 @@ public class Login extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            if (e.getSource() == login) {
+            if (e.getSource() == loginBt) {
 
-            } else if (e.getSource() == clear) {
+            } else if (e.getSource() == clearBt) {
                 userField.setText("");
                 passwordField.setText("");
 
             } else {
-                // new SignUp();
-                // setVisible(false);
+                this.setVisible(false);
+                new Signup();
+
             }
 
         } catch (Exception E) {
