@@ -3,7 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-// import java.sql.*;
+import java.sql.ResultSet;
 
 public class Login extends JFrame implements ActionListener {
     JLabel welcome, userName, password;
@@ -101,6 +101,27 @@ public class Login extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == loginBt) {
+                try {
+                    Connectivity c = new Connectivity();
+
+                    // Check if username and password matches
+                    String query = "SELECT * FROM Account WHERE username = '" + userField.getText() + "' ";
+                    ResultSet checkUser = c.s.executeQuery(query);
+
+                    if (checkUser.next()) {
+                        if (checkUser.getString("password").equals(passwordField.getText())) {
+                            this.setVisible(false);
+                            JOptionPane.showMessageDialog(null, "Login Successful");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Invalid Password");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid Username");
+                    }
+
+                } catch (Exception E) {
+                    System.out.println("ERROR: " + E.getMessage());
+                }
 
             } else if (e.getSource() == clearBt) {
                 userField.setText("");
