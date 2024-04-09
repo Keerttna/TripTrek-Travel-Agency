@@ -92,7 +92,6 @@ public class Login extends JFrame implements ActionListener {
         ImageIcon bgImgIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/LoginBg.gif"));
         JLabel bgLabel = new JLabel(bgImgIcon);
         bgLabel.setBounds(0, 0, 1280, 720);
-
         add(bgLabel);
 
         setVisible(true);
@@ -116,7 +115,12 @@ public class Login extends JFrame implements ActionListener {
                         String enteredPassword = new String(enteredPasswordChars);
                         if (storedPassword.equals(enteredPassword)) {
                             this.setVisible(false);
-                            JOptionPane.showMessageDialog(null, "Login Successful");
+                            // Get user's name
+                            String name = checkUser.getString("name");
+
+                            // Open the homepage
+                            new HomePage(name);
+
                         } else {
                             JOptionPane.showMessageDialog(null, "Invalid Password", "Error", JOptionPane.ERROR_MESSAGE);
                         }
