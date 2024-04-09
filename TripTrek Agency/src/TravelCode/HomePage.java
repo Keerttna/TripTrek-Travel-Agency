@@ -206,7 +206,7 @@ public class HomePage extends JFrame implements ActionListener {
         contentPane.add(viewHotels);
 
         // Add background image
-        ImageIcon bgImg = new ImageIcon(ClassLoader.getSystemResource("Icons/homepgBg.jpg"));
+        ImageIcon bgImg = new ImageIcon(ClassLoader.getSystemResource("Icons/homePgBg.jpg"));
         Image imgBg = bgImg.getImage().getScaledInstance(600, 400, Image.SCALE_DEFAULT);
         ImageIcon background = new ImageIcon(imgBg);
 
