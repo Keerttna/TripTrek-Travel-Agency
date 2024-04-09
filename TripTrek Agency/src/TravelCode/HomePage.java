@@ -31,7 +31,7 @@ public class HomePage extends JFrame implements ActionListener {
         contentPane.add(header);
 
         // Add Logo in header
-        ImageIcon logoIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/logo-removebg-preview.png"));
+        ImageIcon logoIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/logo.png"));
         Image logoImage = logoIcon.getImage().getScaledInstance(200, 110, Image.SCALE_SMOOTH);
         ImageIcon logoimg = new ImageIcon(logoImage);
         JLabel logoimgLabel = new JLabel(logoimg);
@@ -84,7 +84,7 @@ public class HomePage extends JFrame implements ActionListener {
         header.add(viewBookings);
 
         // Add vacation videos
-        ImageIcon bgImgIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/VacationPlacesBg.gif"));
+        ImageIcon bgImgIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/LoginBg.gif"));
         JLabel bgLabel = new JLabel(bgImgIcon);
         bgLabel.setBounds(50, 120, 580, 200);
         add(bgLabel);
