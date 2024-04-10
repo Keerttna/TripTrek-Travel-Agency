@@ -94,21 +94,21 @@ public class HomePage extends JFrame implements ActionListener {
         Image destinationImage = destinationIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT);
         ImageIcon destinationImg = new ImageIcon(destinationImage);
         JLabel destinationImgLabel = new JLabel(destinationImg);
-        destinationImgLabel.setBounds(50, 325, 100, 80);
+        destinationImgLabel.setBounds(50, 320, 100, 80);
         add(destinationImgLabel);
 
         // Select destination
         JLabel destinationLabel = new JLabel("Select Destination:");
         destinationLabel.setForeground(Color.BLACK);
         destinationLabel.setFont(new Font("Georgia", Font.BOLD, 18));
-        destinationLabel.setBounds(130, 350, 200, 30);
+        destinationLabel.setBounds(130, 345, 200, 30);
         contentPane.add(destinationLabel);
 
         // Add dropdown menu for destinations
         String[] destinations = { "Wayanad, Kerala", "Alleppey, Kerala", "Gokarna, Karnataka" };
         JComboBox<String> destination = new JComboBox<>(destinations);
         destination.setFont(new Font("Georgia", Font.PLAIN, 16));
-        destination.setBounds(350, 350, 200, 30);
+        destination.setBounds(350, 345, 200, 30);
         contentPane.add(destination);
 
         // Add pickup icon
@@ -116,21 +116,21 @@ public class HomePage extends JFrame implements ActionListener {
         Image pickupImage = pickupIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT);
         ImageIcon pickupImg = new ImageIcon(pickupImage);
         JLabel pickupImgLabel = new JLabel(pickupImg);
-        pickupImgLabel.setBounds(50, 400, 100, 80);
+        pickupImgLabel.setBounds(50, 380, 100, 80);
         add(pickupImgLabel);
 
         // Add pickup point
         JLabel pickupLabel = new JLabel("Select Pickup Point:");
         pickupLabel.setForeground(Color.BLACK);
         pickupLabel.setFont(new Font("Georgia", Font.BOLD, 18));
-        pickupLabel.setBounds(130, 425, 200, 30);
+        pickupLabel.setBounds(130, 405, 200, 30);
         contentPane.add(pickupLabel);
 
         // Add dropdown menu for pickup points
         String[] pickupPoints = { "Nearest Bus Stop", "Nearest Railway Station", "Nearest Airport" };
         JComboBox<String> pickup = new JComboBox<>(pickupPoints);
         pickup.setFont(new Font("Georgia", Font.PLAIN, 16));
-        pickup.setBounds(350, 425, 200, 30);
+        pickup.setBounds(350, 405, 200, 30);
         contentPane.add(pickup);
 
         // Add package icon
@@ -138,21 +138,21 @@ public class HomePage extends JFrame implements ActionListener {
         Image packageImage = packageIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT);
         ImageIcon packageImg = new ImageIcon(packageImage);
         JLabel packageImgLabel = new JLabel(packageImg);
-        packageImgLabel.setBounds(50, 475, 100, 80);
+        packageImgLabel.setBounds(50, 440, 100, 80);
         add(packageImgLabel);
 
         // Select package
         JLabel packageLabel = new JLabel("Select Package Type:");
         packageLabel.setForeground(Color.BLACK);
         packageLabel.setFont(new Font("Georgia", Font.BOLD, 18));
-        packageLabel.setBounds(130, 500, 200, 30);
+        packageLabel.setBounds(130, 465, 200, 30);
         contentPane.add(packageLabel);
 
         // Add dropdown menu for packages
         String[] packages = { "Gold", "Silver", "Bronze" };
         JComboBox<String> packageType = new JComboBox<>(packages);
         packageType.setFont(new Font("Georgia", Font.PLAIN, 16));
-        packageType.setBounds(350, 500, 200, 30);
+        packageType.setBounds(350, 465, 200, 30);
         contentPane.add(packageType);
 
         // No. of people icon
@@ -160,53 +160,60 @@ public class HomePage extends JFrame implements ActionListener {
         Image peopleImage = peopleIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT);
         ImageIcon peopleImg = new ImageIcon(peopleImage);
         JLabel peopleImgLabel = new JLabel(peopleImg);
-        peopleImgLabel.setBounds(50, 550, 100, 80);
+        peopleImgLabel.setBounds(50, 500, 100, 80);
         add(peopleImgLabel);
 
         // Add number of people
         JLabel peopleLabel = new JLabel("No. of People:");
         peopleLabel.setForeground(Color.BLACK);
         peopleLabel.setFont(new Font("Georgia", Font.BOLD, 18));
-        peopleLabel.setBounds(130, 575, 200, 30);
+        peopleLabel.setBounds(130, 525, 200, 30);
         contentPane.add(peopleLabel);
 
         // Add a number spinner for selecting number of people
         JSpinner peopleSpinner = new JSpinner(new SpinnerNumberModel(5, 1, 50, 1));
         peopleSpinner.setFont(new Font("Georgia", Font.PLAIN, 16));
-        peopleSpinner.setBounds(350, 575, 200, 30);
+        peopleSpinner.setBounds(350, 525, 200, 30);
         peopleSpinner.setEditor(new JSpinner.DefaultEditor(peopleSpinner));
         contentPane.add(peopleSpinner);
+
+        // Add View Hotels button
+        JButton viewHotels = new JButton("View Hotels");
+        viewHotels.setFont(new Font("Georgia", Font.BOLD, 14));
+        viewHotels.setBounds(250, 585, 150, 30);
+        viewHotels.setBackground(new Color(16, 189, 178));
+        contentPane.add(viewHotels);
+
+        // Add check package details label
+        JLabel packageDetails = new JLabel("Check Package Details:");
+        packageDetails.setForeground(Color.BLACK);
+        packageDetails.setFont(new Font("Times New Roman", Font.BOLD, 18));
+        packageDetails.setBounds(690, 150, 250, 30);
+        contentPane.add(packageDetails);
 
         // Add gold package details button
         goldPackage = new JButton("Gold Package");
         goldPackage.setFont(new Font("Georgia", Font.BOLD, 14));
-        goldPackage.setBounds(700, 150, 150, 30);
+        goldPackage.setBounds(700, 200, 150, 30);
         goldPackage.addActionListener(this);
         contentPane.add(goldPackage);
 
         // Add silver package details button
         silverPackage = new JButton("Silver Package");
         silverPackage.setFont(new Font("Georgia", Font.BOLD, 14));
-        silverPackage.setBounds(700, 200, 150, 30);
+        silverPackage.setBounds(870, 200, 150, 30);
         silverPackage.addActionListener(this);
         contentPane.add(silverPackage);
 
         // Add bronze package details button
         bronzePackage = new JButton("Bronze Package");
         bronzePackage.setFont(new Font("Georgia", Font.BOLD, 14));
-        bronzePackage.setBounds(700, 250, 150, 30);
+        bronzePackage.setBounds(1040, 200, 150, 30);
         bronzePackage.addActionListener(this);
         contentPane.add(bronzePackage);
 
-        // Add View Hotels button
-        JButton viewHotels = new JButton("View Hotels");
-        viewHotels.setFont(new Font("Georgia", Font.BOLD, 14));
-        viewHotels.setBounds(1000, 150, 150, 30);
-        viewHotels.setBackground(new Color(16, 189, 178));
-        contentPane.add(viewHotels);
-
         // Add background image
-        ImageIcon bgImg = new ImageIcon(ClassLoader.getSystemResource("Icons/homepgBg.jpg"));
+        ImageIcon bgImg = new ImageIcon(ClassLoader.getSystemResource("Icons/homePgBg.jpg"));
         Image imgBg = bgImg.getImage().getScaledInstance(600, 400, Image.SCALE_DEFAULT);
         ImageIcon background = new ImageIcon(imgBg);
 
