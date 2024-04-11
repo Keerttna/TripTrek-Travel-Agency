@@ -158,12 +158,12 @@ public class HotelsPage extends JFrame implements ActionListener {
 
         } else {
             // Hotel 1
-            ImageIcon wayanadImg1 = new ImageIcon(ClassLoader.getSystemResource("Icons/Allepey/VenicePremium.jpg"));
-            Image wayanadImage1 = wayanadImg1.getImage().getScaledInstance(640, 145, Image.SCALE_DEFAULT);
-            ImageIcon wayanadImgIcon1 = new ImageIcon(wayanadImage1);
-            JLabel wayanadImgLabel1 = new JLabel(wayanadImgIcon1);
-            wayanadImgLabel1.setBounds(35, 130, 640, 145);
-            contentPane.add(wayanadImgLabel1);
+            ImageIcon allepeyImg1 = new ImageIcon(ClassLoader.getSystemResource("Icons/Allepey/VenicePremium.jpg"));
+            Image allepeyImage1 = allepeyImg1.getImage().getScaledInstance(640, 145, Image.SCALE_DEFAULT);
+            ImageIcon allepeyImgIcon1 = new ImageIcon(allepeyImage1);
+            JLabel allepeyImgLabel1 = new JLabel(allepeyImgIcon1);
+            allepeyImgLabel1.setBounds(35, 130, 640, 145);
+            contentPane.add(allepeyImgLabel1);
 
             // Hotel 2
             ImageIcon allepeyImg2 = new ImageIcon(ClassLoader.getSystemResource("Icons/Allepey/abadTurtle.jpg"));
