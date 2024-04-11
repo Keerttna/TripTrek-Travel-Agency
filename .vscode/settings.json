@@ -5,6 +5,7 @@
     ],
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "d:\\Projects\\Java External Libraries\\mysql-connector-java-8.0.28.jar"
+        "d:\\Projects\\Java External Libraries\\mysql-connector-java-8.0.28.jar",
+        "d:\\Projects\\Java External Libraries\\jcalendar-tz-1.3.3-4.jar"
     ]
 }

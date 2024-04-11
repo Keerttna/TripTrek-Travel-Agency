@@ -1,18 +1,39 @@
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import java.awt.event.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.util.Date;
 import java.util.TimeZone;
 
 public class HomePage extends JFrame implements ActionListener {
-    private JPanel contentPane;
+    public JPanel contentPane;
     private JButton goldPackage, silverPackage, bronzePackage;
+    private JButton viewHotels;
+    private JSpinner peopleSpinner;
+    private JComboBox<String> destination;
+    private JComboBox<String> pickup;
+    private JComboBox<String> packageType;
+    String name;
+    String userName;
 
-    HomePage(String name) {
+    public HomePage(String userNameFromLogin) {
+        userName = userNameFromLogin;
+        try {
+            Connectivity conn = new Connectivity();
+            String query = "SELECT * FROM Account WHERE username = '" + userName + "' ";
+
+            ResultSet rs = conn.s.executeQuery(query);
+            rs.next();
+            name = rs.getString("name");
+        } catch (SQLException e) {
+            // Handle the exception
+            e.printStackTrace();
+        }
+        
         setSize(1280, 720);
         setTitle("TripTrek Agency");
         contentPane = new JPanel();
@@ -87,7 +108,7 @@ public class HomePage extends JFrame implements ActionListener {
         ImageIcon bgImgIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/LoginBg.gif"));
         JLabel bgLabel = new JLabel(bgImgIcon);
         bgLabel.setBounds(50, 120, 580, 200);
-        add(bgLabel);
+        contentPane.add(bgLabel);
 
         // Add destination icon
         ImageIcon destinationIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/destinationIcon.jpg"));
@@ -95,7 +116,7 @@ public class HomePage extends JFrame implements ActionListener {
         ImageIcon destinationImg = new ImageIcon(destinationImage);
         JLabel destinationImgLabel = new JLabel(destinationImg);
         destinationImgLabel.setBounds(50, 320, 100, 80);
-        add(destinationImgLabel);
+        contentPane.add(destinationImgLabel);
 
         // Select destination
         JLabel destinationLabel = new JLabel("Select Destination:");
@@ -106,7 +127,7 @@ public class HomePage extends JFrame implements ActionListener {
 
         // Add dropdown menu for destinations
         String[] destinations = { "Wayanad, Kerala", "Alleppey, Kerala", "Gokarna, Karnataka" };
-        JComboBox<String> destination = new JComboBox<>(destinations);
+        destination = new JComboBox<>(destinations);
         destination.setFont(new Font("Georgia", Font.PLAIN, 16));
         destination.setBounds(350, 345, 200, 30);
         contentPane.add(destination);
@@ -117,7 +138,7 @@ public class HomePage extends JFrame implements ActionListener {
         ImageIcon pickupImg = new ImageIcon(pickupImage);
         JLabel pickupImgLabel = new JLabel(pickupImg);
         pickupImgLabel.setBounds(50, 380, 100, 80);
-        add(pickupImgLabel);
+        contentPane.add(pickupImgLabel);
 
         // Add pickup point
         JLabel pickupLabel = new JLabel("Select Pickup Point:");
@@ -128,7 +149,7 @@ public class HomePage extends JFrame implements ActionListener {
 
         // Add dropdown menu for pickup points
         String[] pickupPoints = { "Nearest Bus Stop", "Nearest Railway Station", "Nearest Airport" };
-        JComboBox<String> pickup = new JComboBox<>(pickupPoints);
+        pickup = new JComboBox<>(pickupPoints);
         pickup.setFont(new Font("Georgia", Font.PLAIN, 16));
         pickup.setBounds(350, 405, 200, 30);
         contentPane.add(pickup);
@@ -139,7 +160,7 @@ public class HomePage extends JFrame implements ActionListener {
         ImageIcon packageImg = new ImageIcon(packageImage);
         JLabel packageImgLabel = new JLabel(packageImg);
         packageImgLabel.setBounds(50, 440, 100, 80);
-        add(packageImgLabel);
+        contentPane.add(packageImgLabel);
 
         // Select package
         JLabel packageLabel = new JLabel("Select Package Type:");
@@ -150,7 +171,7 @@ public class HomePage extends JFrame implements ActionListener {
 
         // Add dropdown menu for packages
         String[] packages = { "Gold", "Silver", "Bronze" };
-        JComboBox<String> packageType = new JComboBox<>(packages);
+        packageType = new JComboBox<>(packages);
         packageType.setFont(new Font("Georgia", Font.PLAIN, 16));
         packageType.setBounds(350, 465, 200, 30);
         contentPane.add(packageType);
@@ -161,7 +182,7 @@ public class HomePage extends JFrame implements ActionListener {
         ImageIcon peopleImg = new ImageIcon(peopleImage);
         JLabel peopleImgLabel = new JLabel(peopleImg);
         peopleImgLabel.setBounds(50, 500, 100, 80);
-        add(peopleImgLabel);
+        contentPane.add(peopleImgLabel);
 
         // Add number of people
         JLabel peopleLabel = new JLabel("No. of People:");
@@ -171,17 +192,18 @@ public class HomePage extends JFrame implements ActionListener {
         contentPane.add(peopleLabel);
 
         // Add a number spinner for selecting number of people
-        JSpinner peopleSpinner = new JSpinner(new SpinnerNumberModel(5, 1, 50, 1));
+        peopleSpinner = new JSpinner(new SpinnerNumberModel(5, 1, 50, 1));
         peopleSpinner.setFont(new Font("Georgia", Font.PLAIN, 16));
         peopleSpinner.setBounds(350, 525, 200, 30);
         peopleSpinner.setEditor(new JSpinner.DefaultEditor(peopleSpinner));
         contentPane.add(peopleSpinner);
 
         // Add View Hotels button
-        JButton viewHotels = new JButton("View Hotels");
+        viewHotels = new JButton("View Hotels");
         viewHotels.setFont(new Font("Georgia", Font.BOLD, 14));
         viewHotels.setBounds(250, 585, 150, 30);
         viewHotels.setBackground(new Color(16, 189, 178));
+        viewHotels.addActionListener(this);
         contentPane.add(viewHotels);
 
         // Add check package details label
@@ -222,12 +244,6 @@ public class HomePage extends JFrame implements ActionListener {
         contentPane.add(bgLabel1);
 
         this.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        HomePage home = new HomePage("Aishu");
-        home.setVisible(true);
-
     }
 
     @Override
@@ -279,16 +295,31 @@ public class HomePage extends JFrame implements ActionListener {
                                 +
                                 "<div style='font-family: Georgia; font-size: 12px;'><ul><li>Assistance: Limited assistance available during business hours.</li></html>",
                         "Bronze Package Details", JOptionPane.INFORMATION_MESSAGE);
+            } else if (e.getSource() == viewHotels) {
+                // Get selected destination
+                String selectedDestination = (String) destination.getSelectedItem();
+                // // Get selected package type
+                // String selectedPackage = (String) packageType.getSelectedItem();
+                // // Get number of people
+                // int people = (int) peopleSpinner.getValue();
+                // // Get selected pickup point
+                // String selectedPickup = (String) pickup.getSelectedItem();
+
+                // Open Hotels Page
+                this.setVisible(false);
+                new HotelsPage(selectedDestination, userName);
+
             }
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-        // Gold Package
-        if (e.getActionCommand().equals("Gold Package Details")) {
-            // Display Gold Package Details in a pop-up window using html
-            JOptionPane.showMessageDialog(null, "Hey", "Gold Package Details", JOptionPane.INFORMATION_MESSAGE);
 
-        }
+    }
+
+    public static void main(String[] args) {
+        //HomePage home = new HomePage("Aishu");
+        //home.setVisible(true);
+
     }
 
 }
