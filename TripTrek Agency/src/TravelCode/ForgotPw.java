@@ -140,6 +140,8 @@ public class ForgotPw extends JFrame implements ActionListener {
                         c.s.executeUpdate(updateQuery);
 
                         JOptionPane.showMessageDialog(null, "Password Update Successful");
+
+                        new Login();
                     } else {
                         JOptionPane.showMessageDialog(null, "Wrong answer!", "Error", JOptionPane.ERROR_MESSAGE);
                     }

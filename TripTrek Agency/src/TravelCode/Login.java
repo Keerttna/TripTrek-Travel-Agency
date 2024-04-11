@@ -115,11 +115,9 @@ public class Login extends JFrame implements ActionListener {
                         String enteredPassword = new String(enteredPasswordChars);
                         if (storedPassword.equals(enteredPassword)) {
                             this.setVisible(false);
-                            // Get user's name
-                            String name = checkUser.getString("name");
-
+                            
                             // Open the homepage
-                            new HomePage(name);
+                            new HomePage(userField.getText());
 
                         } else {
                             JOptionPane.showMessageDialog(null, "Invalid Password", "Error", JOptionPane.ERROR_MESSAGE);
