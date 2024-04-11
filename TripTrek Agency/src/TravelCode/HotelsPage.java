@@ -198,7 +198,7 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(title);
 
         // Add hotel icon
-        ImageIcon hotelIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/destinationIcon.jpg"));
+        ImageIcon hotelIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/hotelIcon.png"));
         Image hotelImage = hotelIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT);
         ImageIcon hotelImg = new ImageIcon(hotelImage);
         JLabel hotelImgLabel = new JLabel(hotelImg);
@@ -235,7 +235,7 @@ public class HotelsPage extends JFrame implements ActionListener {
         }
 
         // Add check-in date icon
-        ImageIcon checkInIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/destinationIcon.jpg"));
+        ImageIcon checkInIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/checkInIcon.png"));
         Image checkInImage = checkInIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT);
         ImageIcon checkInImg = new ImageIcon(checkInImage);
         JLabel checkInImgLabel = new JLabel(checkInImg);
@@ -254,7 +254,7 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(checkInField);
 
         // Add check-out date icon
-        ImageIcon checkOutIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/destinationIcon.jpg"));
+        ImageIcon checkOutIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/checkInIcon.png"));
         Image checkOutImage = checkOutIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT);
         ImageIcon checkOutImg = new ImageIcon(checkOutImage);
         JLabel checkOutImgLabel = new JLabel(checkOutImg);
@@ -273,7 +273,7 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(checkOutField);
 
         // Add room type icon
-        ImageIcon roomTypeIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/destinationIcon.jpg"));
+        ImageIcon roomTypeIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/roomTypeIcon.png"));
         Image roomTypeImage = roomTypeIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT);
         ImageIcon roomTypeImg = new ImageIcon(roomTypeImage);
         JLabel roomTypeImgLabel = new JLabel(roomTypeImg);
@@ -315,7 +315,7 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(doubleBedField);
 
         // Add AC/Non AC icon
-        ImageIcon acIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/destinationIcon.jpg"));
+        ImageIcon acIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/acIcon.png"));
         Image acImage = acIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT);
         ImageIcon acImg = new ImageIcon(acImage);
         JLabel acImgLabel = new JLabel(acImg);
@@ -344,7 +344,7 @@ public class HotelsPage extends JFrame implements ActionListener {
         acGroup.add(nonAc);
 
         // Add food icon
-        ImageIcon foodIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/destinationIcon.jpg"));
+        ImageIcon foodIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/foodIcon.png"));
         Image foodImage = foodIcon.getImage().getScaledInstance(35, 35, Image.SCALE_DEFAULT);
         ImageIcon foodImg = new ImageIcon(foodImage);
         JLabel foodImgLabel = new JLabel(foodImg);
@@ -386,7 +386,7 @@ public class HotelsPage extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new HotelsPage("Gokarna, Karnataka", "Aishu");
+        //new HotelsPage("Gokarna, Karnataka", "Aishu");
 
     }
 
