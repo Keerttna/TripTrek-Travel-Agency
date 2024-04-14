@@ -4,8 +4,11 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.sql.ResultSet;
@@ -13,13 +16,31 @@ import java.sql.SQLException;
 import com.toedter.calendar.JDateChooser;
 
 public class HotelsPage extends JFrame implements ActionListener {
-    JButton back;
     private JPanel contentPane;
-    String name;
-    String userName;
+    JButton back, checkPriceBt, confirmBooking;
+    String name, userName, destination, selectedPackage, selectedPickUp;
+    int people;
+    int days;
+    JComboBox<String> hotelList;
+    JDateChooser checkInField;
+    JTextField checkOutField;
+    JTextField singleBedField, doubleBedField;
+    ButtonGroup acGroup, foodGroup;
+    JRadioButton ac, nonAc;
+    JRadioButton food, noFood;
+    float acPrice = 0;
+    float foodPrice = 0;
+    long checkInTime, checkOutTime;
 
-    HotelsPage(String destination, String userNameFromLogin) {
+    HotelsPage(String userNameFromLogin, String destinationFromHomepg, int daysFromPackage,
+            String selectedPackageFromHome, int peopleFromHomePg, String selectedPickUpFromHomePg) {
         userName = userNameFromLogin;
+        destination = destinationFromHomepg;
+        days = daysFromPackage;
+        selectedPackage = selectedPackageFromHome;
+        people = peopleFromHomePg;
+        selectedPickUp = selectedPickUpFromHomePg;
+
         try {
             Connectivity conn = new Connectivity();
             String query = "SELECT * FROM Account WHERE username = '" + userName + "' ";
@@ -28,7 +49,6 @@ public class HotelsPage extends JFrame implements ActionListener {
             rs.next();
             name = rs.getString("name");
         } catch (SQLException e) {
-            // Handle the exception
             e.printStackTrace();
         }
 
@@ -214,21 +234,21 @@ public class HotelsPage extends JFrame implements ActionListener {
         if (destination.equals("Wayanad, Kerala")) {
             // Add a dropdown menu for selecting hotel
             String[] hotels = { "Jungle Bay Resort", "Morickap Resort", "Vyna Hillock Resort" };
-            JComboBox<String> hotelList = new JComboBox<>(hotels);
+            hotelList = new JComboBox<>(hotels);
             hotelList.setFont(new Font("Georgia", Font.PLAIN, 16));
             hotelList.setBounds(230, 50, 200, 30);
             panel.add(hotelList);
         } else if (destination.equals("Gokarna, Karnataka")) {
             // Add a dropdown menu for selecting hotel
             String[] hotels = { "Samruddhi Resort", "Arthigamya Hotels", "Stone Wood Resort" };
-            JComboBox<String> hotelList = new JComboBox<>(hotels);
+            hotelList = new JComboBox<>(hotels);
             hotelList.setFont(new Font("Georgia", Font.PLAIN, 16));
             hotelList.setBounds(230, 50, 200, 30);
             panel.add(hotelList);
         } else {
             // Add a dropdown menu for selecting hotel
             String[] hotels = { "Venice Premium Houseboat", "Abad Turtle Beach Resort", "Sterling Lake Palace" };
-            JComboBox<String> hotelList = new JComboBox<>(hotels);
+            hotelList = new JComboBox<>(hotels);
             hotelList.setFont(new Font("Georgia", Font.PLAIN, 16));
             hotelList.setBounds(230, 50, 200, 30);
             panel.add(hotelList);
@@ -249,8 +269,10 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(checkInDate);
 
         // Add check-in date field
-        JDateChooser checkInField = new JDateChooser();
+        checkInField = new JDateChooser();
         checkInField.setBounds(230, 100, 200, 30);
+        // Set minimum selectable date to the next date
+        checkInField.setMinSelectableDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
         panel.add(checkInField);
 
         // Add check-out date icon
@@ -267,10 +289,28 @@ public class HotelsPage extends JFrame implements ActionListener {
         checkOutDate.setBounds(80, 150, 200, 30);
         panel.add(checkOutDate);
 
-        // Add check-out date field
-        JDateChooser checkOutField = new JDateChooser();
+        // Add a check-out date field
+        checkOutField = new JTextField();
         checkOutField.setBounds(230, 150, 200, 30);
+        checkOutField.setForeground(Color.BLACK);
+        checkOutField.setBackground(Color.WHITE);
+        checkOutField.setBorder(new LineBorder(Color.BLACK, 1));
+        checkOutField.setEditable(false);
         panel.add(checkOutField);
+
+        // Add listener to check-in field
+        checkInField.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (checkInField.getDate() != null) {
+
+                    // Calculate check-out date based on check-in date and number of days
+                    checkInTime = checkInField.getDate().getTime();
+                    checkOutTime = checkInTime + (days * 24 * 60 * 60 * 1000); // milliseconds
+                    checkOutField.setText(SimpleDateFormat.getDateInstance().format(new Date(checkOutTime)));
+                }
+            }
+        });
 
         // Add room type icon
         ImageIcon roomTypeIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/roomTypeIcon.png"));
@@ -299,7 +339,7 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(singleBedRoom);
 
         // Add single bed room field
-        JTextField singleBedField = new JTextField();
+        singleBedField = new JTextField();
         singleBedField.setBounds(330, 240, 50, 30);
         panel.add(singleBedField);
 
@@ -310,9 +350,38 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(doubleBedRoom);
 
         // Add double bed room field
-        JTextField doubleBedField = new JTextField();
+        doubleBedField = new JTextField();
         doubleBedField.setBounds(330, 280, 50, 30);
         panel.add(doubleBedField);
+
+        // Add action listener to single bed room field
+        singleBedField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Update double bed room field
+                try {
+                    int singleBeds = Integer.parseInt(singleBedField.getText());
+                    int doubleBeds = (people - singleBeds) / 2;
+                    doubleBedField.setText(Integer.toString(doubleBeds));
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        // Add action listener to double bed room field
+        doubleBedField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int doubleBeds = Integer.parseInt(doubleBedField.getText());
+                    int singleBeds = people - (doubleBeds * 2);
+                    singleBedField.setText(Integer.toString(singleBeds));
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         // Add AC/Non AC icon
         ImageIcon acIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/acIcon.png"));
@@ -329,17 +398,17 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(acLabel);
 
         // Add a radio button for selecting AC/Non AC
-        JRadioButton ac = new JRadioButton("AC");
+        ac = new JRadioButton("AC");
         ac.setFont(new Font("Georgia", Font.BOLD, 16));
         ac.setBounds(230, 330, 100, 30);
         panel.add(ac);
 
-        JRadioButton nonAc = new JRadioButton("Non AC");
+        nonAc = new JRadioButton("Non AC");
         nonAc.setFont(new Font("Georgia", Font.BOLD, 16));
         nonAc.setBounds(330, 330, 100, 30);
         panel.add(nonAc);
 
-        ButtonGroup acGroup = new ButtonGroup();
+        acGroup = new ButtonGroup();
         acGroup.add(ac);
         acGroup.add(nonAc);
 
@@ -358,26 +427,28 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(foodLabel);
 
         // Add a radio button for selecting food
-        JRadioButton food = new JRadioButton("Yes");
+        food = new JRadioButton("Yes");
         food.setFont(new Font("Georgia", Font.BOLD, 16));
         food.setBounds(230, 380, 100, 30);
         panel.add(food);
 
-        JRadioButton noFood = new JRadioButton("No");
+        noFood = new JRadioButton("No");
         noFood.setFont(new Font("Georgia", Font.BOLD, 16));
         noFood.setBounds(330, 380, 100, 30);
         panel.add(noFood);
 
-        ButtonGroup foodGroup = new ButtonGroup();
+        foodGroup = new ButtonGroup();
         foodGroup.add(food);
         foodGroup.add(noFood);
 
-        // Add a book button
-        JButton book = new JButton("Book");
-        book.setFont(new Font("Georgia", Font.BOLD, 16));
-        book.setBounds(200, 430, 100, 30);
-        book.setBackground(new Color(32, 178, 170));
-        panel.add(book);
+        // Add a check price button
+        checkPriceBt = new JButton("Check Price");
+        checkPriceBt.setFont(new Font("Georgia", Font.BOLD, 16));
+        checkPriceBt.setBounds(200, 430, 150, 30);
+        checkPriceBt.setBackground(new Color(32, 178, 170));
+        checkPriceBt.setForeground(Color.BLACK);
+        checkPriceBt.addActionListener(this);
+        panel.add(checkPriceBt);
 
         contentPane.add(panel);
 
@@ -386,7 +457,7 @@ public class HotelsPage extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        //new HotelsPage("Gokarna, Karnataka", "Aishu");
+        new HotelsPage("aishu", "Gokarna, Karnataka", 3, "Silver", 6, "Airport");
 
     }
 
@@ -395,7 +466,146 @@ public class HotelsPage extends JFrame implements ActionListener {
         try {
             if (e.getSource() == back) {
                 this.setVisible(false);
-                new HomePage(userName);
+                new PackagePage(userName, destination, selectedPackage, people, selectedPickUp);
+            } else if (e.getSource() == checkPriceBt) {
+
+                // Data validation for number of rooms
+                if (singleBedField.getText().equals("") || doubleBedField.getText().equals("")) {
+                    JOptionPane.showMessageDialog(this, "Please enter the number of rooms");
+                    return;
+                } else if (Integer.valueOf(singleBedField.getText())
+                        + Integer.valueOf(doubleBedField.getText()) != people) {
+                    JOptionPane.showMessageDialog(this, "Number of rooms should be equal to number of people");
+                    return;
+                } else if (Integer.valueOf(singleBedField.getText()) < 0
+                        || Integer.valueOf(doubleBedField.getText()) < 0) {
+                    JOptionPane.showMessageDialog(this, "Invalid number of rooms");
+                    return;
+                }
+
+                String selectedHotel = hotelList.getSelectedItem().toString();
+
+                Connectivity conn = new Connectivity();
+                String query = "SELECT * FROM Hotels_available WHERE hotel = '" + selectedHotel + "' ";
+                ResultSet rs = conn.s.executeQuery(query);
+                if (rs.next() == false) {
+                    JOptionPane.showMessageDialog(this, "Hotel not available");
+                    return;
+                }
+
+                int noOfSingleBed = Integer.valueOf(singleBedField.getText());
+                int noOfDoubleBed = Integer.valueOf(doubleBedField.getText());
+                float doubleBedPrice = rs.getFloat("double_bed_cost") * noOfDoubleBed * days;
+                float singleBedPrice = rs.getFloat("single_bed_cost") * noOfSingleBed * days;
+
+                // Check if ac is selected
+                if (ac.isSelected()) {
+                    acPrice = rs.getFloat("ac_cost") * days;
+                }
+
+                // Check if food is selected
+                if (food.isSelected()) {
+                    foodPrice = rs.getFloat("food_cost") * days;
+                }
+
+                // Display the price in a new frame
+                JFrame priceFrame = new JFrame();
+                priceFrame.setSize(500, 500);
+                priceFrame.setTitle("Price");
+                priceFrame.setLayout(null);
+                priceFrame.setLocationRelativeTo(null);
+                priceFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+                JLabel hotelLabel = new JLabel("Hotel: " + selectedHotel);
+                hotelLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+                hotelLabel.setBounds(50, 50, 200, 30);
+                priceFrame.add(hotelLabel);
+
+                JLabel daysLabel = new JLabel("No. of days: " + days);
+                daysLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+                daysLabel.setBounds(50, 100, 200, 30);
+                priceFrame.add(daysLabel);
+
+                JLabel singleBedPriceLabel = new JLabel(
+                        "Single Bed Room Price: " + rs.getFloat("single_bed_price") + " * " + noOfSingleBed + " * "
+                                + days + " = " + singleBedPrice);
+                singleBedPriceLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+                singleBedPriceLabel.setBounds(50, 150, 400, 30);
+                priceFrame.add(singleBedPriceLabel);
+
+                JLabel doubleBedPriceLabel = new JLabel(
+                        "Double Bed Room Price: " + rs.getFloat("double_bed_price") + " * " + noOfDoubleBed + " * "
+                                + days + " = " + doubleBedPrice);
+                doubleBedPriceLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+                doubleBedPriceLabel.setBounds(50, 200, 400, 30);
+                priceFrame.add(doubleBedPriceLabel);
+
+                if (!ac.isSelected()) {
+                    JLabel acLabel = new JLabel("AC Price: 0.0 ");
+                    acLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+                    acLabel.setBounds(50, 250, 200, 30);
+                    priceFrame.add(acLabel);
+                } else {
+                    JLabel acLabel = new JLabel(
+                            "AC Price: " + rs.getFloat("ac_cost") + " * " + days + " = " + acPrice);
+                    acLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+                    acLabel.setBounds(50, 250, 400, 30);
+                    priceFrame.add(acLabel);
+                }
+
+                if (!food.isSelected()) {
+                    JLabel foodLabel = new JLabel("Food Price: 0.0 ");
+                    foodLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+                    foodLabel.setBounds(50, 300, 200, 30);
+                    priceFrame.add(foodLabel);
+                } else {
+                    JLabel foodLabel = new JLabel(
+                            "Food Price: " + rs.getFloat("food_cost") + " * " + days + " = " + foodPrice);
+                    foodLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+                    foodLabel.setBounds(50, 300, 400, 30);
+                    priceFrame.add(foodLabel);
+                }
+
+                JLabel totalPriceLabel = new JLabel(
+                        "Total Price: " + (singleBedPrice + doubleBedPrice + acPrice + foodPrice));
+                totalPriceLabel.setFont(new Font("Georgia", Font.BOLD, 16));
+                totalPriceLabel.setBounds(50, 350, 400, 30);
+                priceFrame.add(totalPriceLabel);
+
+                // Add conirm booking button
+                JButton confirmBooking = new JButton("Confirm Booking");
+                confirmBooking.setFont(new Font("Georgia", Font.BOLD, 16));
+                confirmBooking.setBounds(150, 400, 200, 30);
+                confirmBooking.setBackground(new Color(32, 178, 170));
+                confirmBooking.addActionListener(this);
+                {
+
+                    // @Override
+                    // public void actionPerformed(ActionEvent e) {
+                    // try {
+                    // Connectivity conn = new Connectivity();
+                    // String query = "INSERT INTO Hotel_Bookings (username, destination, hotel,
+                    // check_in_date, check_out_date, single_bed, double_bed, ac, food, total_price)
+                    // VALUES ('"
+                    // + userName + "', '" + destination + "', '" + selectedHotel + "', '"
+                    // + new java.sql.Date(checkInDate.getTimeInMillis()) + "', '"
+                    // + new java.sql.Date(checkOutDate.getTimeInMillis()) + "', " + noOfSingleBed +
+                    // ", "
+                    // + noOfDoubleBed + ", " + ac.isSelected() + ", " + food.isSelected() + ", "
+                    // + (singleBedPrice + doubleBedPrice + acPrice + foodPrice) + ")";
+                    // conn.s.executeUpdate(query);
+                    // JOptionPane.showMessageDialog(priceFrame, "Booking Confirmed");
+                    // priceFrame.setVisible(false);
+                    // new HomePage(userName);
+                    // } catch (SQLException ex) {
+                    // ex.printStackTrace();
+                    // }
+                    // }
+                }
+                ;
+
+                priceFrame.setVisible(true);
+
             }
 
         } catch (Exception ex) {
