@@ -14,11 +14,12 @@ import java.sql.SQLException;
 public class PackagePage extends JFrame implements ActionListener {
     JPanel contentPane;
     String name, userName, destination, selectedPackage, selectedPickUp;
-    int people;    
+    int people;
     JButton back, book3Day, book5Day, book7Day;
     JLabel itenary3Details, itenary5Details, itenary7Details;
 
-    PackagePage(String userNameFromLogin, String destinationFromHomepg, String selectedPackageFromHome, int peopleFromHomePg, String selectedPickUpFromHomePg) {
+    PackagePage(String userNameFromLogin, String destinationFromHomepg, String selectedPackageFromHome,
+            int peopleFromHomePg, String selectedPickUpFromHomePg) {
         userName = userNameFromLogin;
         destination = destinationFromHomepg;
         selectedPackage = selectedPackageFromHome;
@@ -189,7 +190,7 @@ public class PackagePage extends JFrame implements ActionListener {
                             + "<div style='font-family: Georgia; font-size: 11px;'><ul><li>Visit to Kuruvadweep</li>"
                             + "<div style='font-family: Georgia; font-size: 11px;'><li>Shopping at local markets</li></ul> </html>");
 
-        } else if (destination.equals("Allepey, Kerala")) {
+        } else if (destination.equals("Alleppey, Kerala")) {
             itenary3Details = new JLabel(
                     "<html><div style='font-family: Georgia;font-size: 14px;text-align: center'> 3 Day Itinerary </div><br>"
                             + "<div style='font-family: Georgia; font-size: 11px;'><b><i>Day 1: </i></b><br></div>"
@@ -360,6 +361,7 @@ public class PackagePage extends JFrame implements ActionListener {
         book3Day.setBackground(new Color(32, 178, 170));
         book3Day.setForeground(Color.BLACK);
         book3Day.setBounds(120, 590, 200, 30);
+        book3Day.addActionListener(this);
         contentPane.add(book3Day);
 
         contentPane.add(itenary3Panel);
@@ -388,6 +390,7 @@ public class PackagePage extends JFrame implements ActionListener {
         book5Day.setBackground(new Color(32, 178, 170));
         book5Day.setForeground(Color.BLACK);
         book5Day.setBounds(530, 590, 200, 30);
+        book5Day.addActionListener(this);
         contentPane.add(book5Day);
 
         // Add a panel for displaying 7 day itenary
@@ -414,6 +417,7 @@ public class PackagePage extends JFrame implements ActionListener {
         book7Day.setBackground(new Color(32, 178, 170));
         book7Day.setForeground(Color.BLACK);
         book7Day.setBounds(950, 590, 200, 30);
+        book7Day.addActionListener(this);
         contentPane.add(book7Day);
 
         this.setVisible(true);
@@ -426,19 +430,28 @@ public class PackagePage extends JFrame implements ActionListener {
             new HomePage(userName).setVisible(true);
         } else if (e.getSource() == book3Day) {
             this.setVisible(false);
+            JOptionPane.showMessageDialog(null,
+                    "Redirecting to Hotels Page for booking 3 day package for " + people + " members ! ",
+                    "Booking Confirmation", JOptionPane.INFORMATION_MESSAGE);
             new HotelsPage(userName, destination, 3, selectedPackage, people, selectedPickUp).setVisible(true);
         } else if (e.getSource() == book5Day) {
             this.setVisible(false);
+            JOptionPane.showMessageDialog(null,
+                    "Redirecting to Hotels Page for booking 5 day package for " + people + " members ! ",
+                    "Booking Confirmation", JOptionPane.INFORMATION_MESSAGE);
             new HotelsPage(userName, destination, 5, selectedPackage, people, selectedPickUp).setVisible(true);
         } else if (e.getSource() == book7Day) {
             this.setVisible(false);
+            JOptionPane.showMessageDialog(null,
+                    "Redirecting to Hotels Page for booking 7 day package for " + people + " members ! ",
+                    "Booking Confirmation", JOptionPane.INFORMATION_MESSAGE);
             new HotelsPage(userName, destination, 7, selectedPackage, people, selectedPickUp).setVisible(true);
         }
 
     }
 
     public static void main(String[] args) {
-        //new PackagePage("aishu", "Gokarna, Karnataka").setVisible(true);
+        // new PackagePage("aishu", "Gokarna, Karnataka").setVisible(true);
     }
 
 }
