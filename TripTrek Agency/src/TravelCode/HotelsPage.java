@@ -26,6 +26,7 @@ public class HotelsPage extends JFrame implements ActionListener {
     JRadioButton singleBed, doubleBed, ac, nonAc, food, noFood;
     float acPrice = 0, foodPrice = 0;
     long checkInTime, checkOutTime;
+    String roomType, acType, foodType;
 
     HotelsPage(String userNameFromLogin, String destinationFromHomepg, int daysFromPackage,
             String selectedPackageFromHome, int peopleFromHomePg, String selectedPickUpFromHomePg) {
@@ -408,11 +409,6 @@ public class HotelsPage extends JFrame implements ActionListener {
 
     }
 
-    public static void main(String[] args) {
-        new HotelsPage("aishu", "Gokarna, Karnataka", 3, "Silver", 6, "Airport");
-
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
@@ -462,9 +458,11 @@ public class HotelsPage extends JFrame implements ActionListener {
                 if (singleBed.isSelected()) {
                     singleBedCount = people;
                     doubleBedCount = 0;
+                    roomType = "Single Bed";
                 } else if (doubleBed.isSelected()) {
                     singleBedCount = 0;
                     doubleBedCount = people / 2;
+                    roomType = "Double Bed";
                 }
 
                 float singleBedPrice = rs.getFloat("single_bed_cost") * singleBedCount * days;
@@ -473,15 +471,19 @@ public class HotelsPage extends JFrame implements ActionListener {
                 // Check if ac is selected
                 if (ac.isSelected()) {
                     acPrice = rs.getFloat("ac_cost") * days;
+                    acType = "AC";
                 } else {
                     acPrice = 0;
+                    acType = "Non AC";
                 }
 
                 // Check if food is selected
                 if (food.isSelected()) {
                     foodPrice = rs.getFloat("food_cost") * days;
+                    foodType = "Yes";
                 } else {
                     foodPrice = 0;
+                    foodType = "No";
                 }
 
                 float packagePrice = 0;
@@ -552,6 +554,7 @@ public class HotelsPage extends JFrame implements ActionListener {
                     acLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
                     acLabel.setBounds(50, 250, 400, 30);
                     priceFrame.add(acLabel);
+
                 }
 
                 if (!food.isSelected()) {
@@ -559,11 +562,13 @@ public class HotelsPage extends JFrame implements ActionListener {
                     foodLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
                     foodLabel.setBounds(50, 290, 200, 30);
                     priceFrame.add(foodLabel);
+
                 } else {
                     JLabel foodLabel = new JLabel("\u2022  Food Price: " + foodPrice);
                     foodLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
                     foodLabel.setBounds(50, 290, 400, 30);
                     priceFrame.add(foodLabel);
+
                 }
 
                 JLabel packageLabel = new JLabel("\u2022  Package Price: " + packagePrice);
@@ -598,9 +603,28 @@ public class HotelsPage extends JFrame implements ActionListener {
                 confirmBooking.setBackground(new Color(32, 178, 170));
                 confirmBooking.setForeground(Color.BLACK);
                 confirmBooking.addActionListener((ActionEvent e1) -> {
+                    // Store the booking details in the database
+                    try {
+                        Connectivity conn1 = new Connectivity();
+                        String query1 = "INSERT INTO Bookings (username, destination, pickup_point, package_type, no_of_people, no_of_days, hotel, check_in_date, check_out_date, room_type, ac_type, food, total_price) VALUES ('"
+                                + userName + "', '" + destination + "', '" + selectedPickUp + "', '" + selectedPackage
+                                + "', " + people + ", " + days + ", '" + selectedHotel + "', '"
+                                + SimpleDateFormat.getDateInstance().format(checkInTime) + "', '"
+                                + SimpleDateFormat.getDateInstance().format(checkOutTime) + "', '"
+                                + roomType + "', '" + acType + "', '" + foodType + "', "
+                                + totalPrice + ")";
+                        conn1.s.executeUpdate(query1);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+
                     priceFrame.setVisible(false);
                     JOptionPane.showMessageDialog(this, "Booking confirmed successfully !", "Success",
                             JOptionPane.INFORMATION_MESSAGE);
+
+                    priceFrame.setVisible(false);
+                    this.setVisible(false);
+                    new HomePage(userName);
                 });
                 priceFrame.add(confirmBooking);
 
@@ -611,6 +635,11 @@ public class HotelsPage extends JFrame implements ActionListener {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        new HotelsPage("premika", "Gokarna, Karnataka", 3, "Silver", 6, "Airport");
+
     }
 
 }
