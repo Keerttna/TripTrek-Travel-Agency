@@ -34,20 +34,22 @@ CREATE TABLE Bookings (
     hotel VARCHAR(50) NOT NULL,
     check_in_date VARCHAR(30),
     check_out_date VARCHAR(30),
-    room_type VARCHAR(30),
+    room_type VARCHAR(50),
     ac_type VARCHAR(30),
     food VARCHAR(30),
     total_price FLOAT,
+    booking_date VARCHAR(30),
     PRIMARY KEY (booking_id),
     FOREIGN KEY (username)
         REFERENCES ACCOUNT (username)
 );
 
-ALTER TABLE Bookings
-	modify column room_type VARCHAR(50);
-
 SELECT * FROM Bookings;
 
+ALTER TABLE Bookings
+MODIFY COLUMN booking_date VARCHAR(30);
+
+DESCRIBE Bookings;
 
 
 

@@ -14,5 +14,4 @@ public class Connectivity {
             System.out.println("ERROR: " + e.getMessage());
         }
     }
-
 }

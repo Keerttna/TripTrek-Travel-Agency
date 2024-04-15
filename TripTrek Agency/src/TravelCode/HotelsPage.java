@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+
 import com.toedter.calendar.JDateChooser;
 
 public class HotelsPage extends JFrame implements ActionListener {
@@ -603,24 +605,48 @@ public class HotelsPage extends JFrame implements ActionListener {
                 confirmBooking.setBackground(new Color(32, 178, 170));
                 confirmBooking.setForeground(Color.BLACK);
                 confirmBooking.addActionListener((ActionEvent e1) -> {
+
+                    // Get the date and time of booking
+                    Date bookingDate = new Date();
+                    Time bookingTime = new Time(bookingDate.getTime());
+
+                    String bookingDateStr = SimpleDateFormat.getDateInstance().format(bookingDate)+ " " + bookingTime.toString();
+
+
                     // Store the booking details in the database
                     try {
                         Connectivity conn1 = new Connectivity();
-                        String query1 = "INSERT INTO Bookings (username, destination, pickup_point, package_type, no_of_people, no_of_days, hotel, check_in_date, check_out_date, room_type, ac_type, food, total_price) VALUES ('"
+                        String query1 = "INSERT INTO Bookings (username, destination, pickup_point, package_type, no_of_people, no_of_days, hotel, check_in_date, check_out_date, room_type, ac_type, food, total_price, booking_date) VALUES ('"
                                 + userName + "', '" + destination + "', '" + selectedPickUp + "', '" + selectedPackage
                                 + "', " + people + ", " + days + ", '" + selectedHotel + "', '"
                                 + SimpleDateFormat.getDateInstance().format(checkInTime) + "', '"
                                 + SimpleDateFormat.getDateInstance().format(checkOutTime) + "', '"
                                 + roomType + "', '" + acType + "', '" + foodType + "', "
-                                + totalPrice + ")";
+                                + totalPrice + ", '" + bookingDateStr +"')";
                         conn1.s.executeUpdate(query1);
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
 
                     priceFrame.setVisible(false);
-                    JOptionPane.showMessageDialog(this, "Booking confirmed successfully !", "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    // Get the booking id from database
+                    try {
+                        Connectivity conn2 = new Connectivity();
+                        String query2 = "SELECT booking_id FROM Bookings WHERE username = '" + userName
+                                + "' AND booking_date = '" + bookingDateStr
+                                + "' ";
+                        ResultSet rs2 = conn2.s.executeQuery(query2);
+                        rs2.next();
+                        int bookingId = rs2.getInt("booking_id");
+
+                        // Display the booking id
+                        JOptionPane.showMessageDialog(this,
+                                "Booking confirmed successfully !\nBooking ID: " + bookingId,
+                                "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
 
                     priceFrame.setVisible(false);
                     this.setVisible(false);
