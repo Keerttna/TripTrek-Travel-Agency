@@ -12,7 +12,7 @@ import java.util.TimeZone;
 public class HomePage extends JFrame implements ActionListener {
     public JPanel contentPane;
     private JButton goldPackage, silverPackage, bronzePackage;
-    private JButton checkPackage;
+    private JButton checkPackage, updateProfile, viewBookings;
     private JSpinner peopleSpinner;
     private JComboBox<String> destination;
     private JComboBox<String> pickup;
@@ -93,15 +93,17 @@ public class HomePage extends JFrame implements ActionListener {
         header.add(userLabel);
 
         // Add button for updating profile
-        JButton updateProfile = new JButton("Update Personal Details");
+        updateProfile = new JButton("Update Personal Details");
         updateProfile.setFont(new Font("Georgia", Font.BOLD, 14));
         updateProfile.setBounds(990, 35, 215, 30);
+        updateProfile.addActionListener(this);
         header.add(updateProfile);
 
         // Add View Bookings button
-        JButton viewBookings = new JButton("View Bookings");
+        viewBookings = new JButton("View Bookings");
         viewBookings.setFont(new Font("Georgia", Font.BOLD, 14));
         viewBookings.setBounds(990, 75, 215, 30);
+        viewBookings.addActionListener(this);
         header.add(viewBookings);
 
         // Add vacation videos
@@ -312,6 +314,12 @@ public class HomePage extends JFrame implements ActionListener {
                 this.setVisible(false);
                 new PackagePage(userName, selectedDestination, selectedPackage, people, selectedPickup);
 
+            } else if (e.getSource() == updateProfile) {
+                // Open Update Details Page
+                new UpdateDetails(userName).isAlwaysOnTop();
+            } else if (e.getSource() == viewBookings) {
+                // Open View Bookings Page
+                new ViewBookings(userName).isAlwaysOnTop();
             }
         } catch (Exception e1) {
             e1.printStackTrace();
@@ -320,7 +328,7 @@ public class HomePage extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        HomePage home = new HomePage("Aishu");
+        HomePage home = new HomePage("k_15");
         home.setVisible(true);
 
     }

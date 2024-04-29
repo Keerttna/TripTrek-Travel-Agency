@@ -146,6 +146,11 @@ public class Signup extends JFrame implements ActionListener {
 
                     c.s.executeUpdate(q);
 
+                    // Insert Customer_Details tables with null values for the username and name
+                    String q2 = "insert into Customer_Details values('" + username + "','" + name
+                            + "',null,null,null,null,null,null)";
+                    c.s.executeUpdate(q2);
+
                     JOptionPane.showMessageDialog(null, "Account Created Successfully!");
 
                     this.setVisible(false);

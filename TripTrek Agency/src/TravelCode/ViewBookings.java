@@ -76,6 +76,7 @@ public class ViewBookings extends JFrame {
                 setSize(1200, 500);
                 setLocationRelativeTo(scrollPane);
                 setVisible(true);
+                
                 setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
             }

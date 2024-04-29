@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -29,6 +28,7 @@ public class HotelsPage extends JFrame implements ActionListener {
     float acPrice = 0, foodPrice = 0;
     long checkInTime, checkOutTime;
     String roomType, acType, foodType;
+    int bookingId;
 
     HotelsPage(String userNameFromLogin, String destinationFromHomepg, int daysFromPackage,
             String selectedPackageFromHome, int peopleFromHomePg, String selectedPickUpFromHomePg) {
@@ -605,50 +605,40 @@ public class HotelsPage extends JFrame implements ActionListener {
                 confirmBooking.setBackground(new Color(32, 178, 170));
                 confirmBooking.setForeground(Color.BLACK);
                 confirmBooking.addActionListener((ActionEvent e1) -> {
-
-                    // Get the date and time of booking
-                    Date bookingDate = new Date();
-                    Time bookingTime = new Time(bookingDate.getTime());
-
-                    String bookingDateStr = SimpleDateFormat.getDateInstance().format(bookingDate)+ " " + bookingTime.toString();
-
-
                     // Store the booking details in the database
                     try {
                         Connectivity conn1 = new Connectivity();
-                        String query1 = "INSERT INTO Bookings (username, destination, pickup_point, package_type, no_of_people, no_of_days, hotel, check_in_date, check_out_date, room_type, ac_type, food, total_price, booking_date) VALUES ('"
+                        String query1 = "INSERT INTO Bookings (username, destination, pickup_point, package_type, no_of_people, no_of_days, hotel, check_in_date, check_out_date, room_type, ac_type, food, total_price) VALUES ('"
                                 + userName + "', '" + destination + "', '" + selectedPickUp + "', '" + selectedPackage
                                 + "', " + people + ", " + days + ", '" + selectedHotel + "', '"
                                 + SimpleDateFormat.getDateInstance().format(checkInTime) + "', '"
                                 + SimpleDateFormat.getDateInstance().format(checkOutTime) + "', '"
                                 + roomType + "', '" + acType + "', '" + foodType + "', "
-                                + totalPrice + ", '" + bookingDateStr +"')";
+                                + totalPrice + ")";
                         conn1.s.executeUpdate(query1);
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                    }
 
-                    priceFrame.setVisible(false);
-                    // Get the booking id from database
-                    try {
-                        Connectivity conn2 = new Connectivity();
+                        // Get the booking id
                         String query2 = "SELECT booking_id FROM Bookings WHERE username = '" + userName
-                                + "' AND booking_date = '" + bookingDateStr
-                                + "' ";
-                        ResultSet rs2 = conn2.s.executeQuery(query2);
-                        rs2.next();
-                        int bookingId = rs2.getInt("booking_id");
+                                + "' AND destination = '" + destination + "' AND pickup_point = '" + selectedPickUp
+                                + "' AND package_type = '" + selectedPackage + "' AND no_of_people = " + people
+                                + " AND no_of_days = " + days + " AND hotel = '" + selectedHotel
+                                + "' AND check_in_date = '" + SimpleDateFormat.getDateInstance().format(checkInTime)
+                                + "' AND check_out_date = '" + SimpleDateFormat.getDateInstance().format(checkOutTime)
+                                + "' AND room_type = '" + roomType + "' AND ac_type = '" + acType + "' AND food = '"
+                                + foodType + "' AND total_price = " + totalPrice + " ";
+                        ResultSet rs1 = conn1.s.executeQuery(query2);
+                        rs1.next();
+                        bookingId = rs1.getInt("booking_id");
 
-                        // Display the booking id
-                        JOptionPane.showMessageDialog(this,
-                                "Booking confirmed successfully !\nBooking ID: " + bookingId,
-                                "Success", JOptionPane.INFORMATION_MESSAGE);
 
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
 
                     priceFrame.setVisible(false);
+                    JOptionPane.showMessageDialog(this, "Booking successful !\nBooking ID: " + bookingId,
+                            "Booking Successful", JOptionPane.INFORMATION_MESSAGE);
+
                     this.setVisible(false);
                     new HomePage(userName);
                 });
@@ -661,10 +651,11 @@ public class HotelsPage extends JFrame implements ActionListener {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
     }
 
     public static void main(String[] args) {
-        new HotelsPage("premika", "Gokarna, Karnataka", 3, "Silver", 6, "Airport");
+        new HotelsPage("sarah26", "Gokarna, Karnataka", 3, "Silver", 6, "Airport");
 
     }
 

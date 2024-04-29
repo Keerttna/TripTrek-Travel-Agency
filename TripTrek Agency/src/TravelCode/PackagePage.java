@@ -446,12 +446,12 @@ public class PackagePage extends JFrame implements ActionListener {
                     "Redirecting to Hotels Page for booking 7 day package for " + people + " members ! ",
                     "Booking Confirmation", JOptionPane.INFORMATION_MESSAGE);
             new HotelsPage(userName, destination, 7, selectedPackage, people, selectedPickUp).setVisible(true);
-        }
+        } 
 
     }
 
     public static void main(String[] args) {
-        // new PackagePage("aishu", "Gokarna, Karnataka").setVisible(true);
+        new PackagePage("aishu", "Wayanad, Kerala", "Gold", 6, "Nearest Airport").setVisible(true);
     }
 
 }
