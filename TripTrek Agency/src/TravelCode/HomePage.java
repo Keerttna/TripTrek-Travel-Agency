@@ -12,7 +12,7 @@ import java.util.TimeZone;
 public class HomePage extends JFrame implements ActionListener {
     public JPanel contentPane;
     private JButton goldPackage, silverPackage, bronzePackage;
-    private JButton viewHotels;
+    private JButton checkPackage, updateProfile, viewBookings;
     private JSpinner peopleSpinner;
     private JComboBox<String> destination;
     private JComboBox<String> pickup;
@@ -33,7 +33,7 @@ public class HomePage extends JFrame implements ActionListener {
             // Handle the exception
             e.printStackTrace();
         }
-        
+
         setSize(1280, 720);
         setTitle("TripTrek Agency");
         contentPane = new JPanel();
@@ -93,15 +93,17 @@ public class HomePage extends JFrame implements ActionListener {
         header.add(userLabel);
 
         // Add button for updating profile
-        JButton updateProfile = new JButton("Update Personal Details");
+        updateProfile = new JButton("Update Personal Details");
         updateProfile.setFont(new Font("Georgia", Font.BOLD, 14));
         updateProfile.setBounds(990, 35, 215, 30);
+        updateProfile.addActionListener(this);
         header.add(updateProfile);
 
         // Add View Bookings button
-        JButton viewBookings = new JButton("View Bookings");
+        viewBookings = new JButton("View Bookings");
         viewBookings.setFont(new Font("Georgia", Font.BOLD, 14));
         viewBookings.setBounds(990, 75, 215, 30);
+        viewBookings.addActionListener(this);
         header.add(viewBookings);
 
         // Add vacation videos
@@ -198,13 +200,13 @@ public class HomePage extends JFrame implements ActionListener {
         peopleSpinner.setEditor(new JSpinner.DefaultEditor(peopleSpinner));
         contentPane.add(peopleSpinner);
 
-        // Add View Hotels button
-        viewHotels = new JButton("View Hotels");
-        viewHotels.setFont(new Font("Georgia", Font.BOLD, 14));
-        viewHotels.setBounds(250, 585, 150, 30);
-        viewHotels.setBackground(new Color(16, 189, 178));
-        viewHotels.addActionListener(this);
-        contentPane.add(viewHotels);
+        // Add book package button
+        checkPackage = new JButton("Book Package");
+        checkPackage.setFont(new Font("Georgia", Font.BOLD, 14));
+        checkPackage.setBounds(250, 585, 150, 30);
+        checkPackage.setBackground(new Color(16, 189, 178));
+        checkPackage.addActionListener(this);
+        contentPane.add(checkPackage);
 
         // Add check package details label
         JLabel packageDetails = new JLabel("Check Package Details:");
@@ -295,20 +297,29 @@ public class HomePage extends JFrame implements ActionListener {
                                 +
                                 "<div style='font-family: Georgia; font-size: 12px;'><ul><li>Assistance: Limited assistance available during business hours.</li></html>",
                         "Bronze Package Details", JOptionPane.INFORMATION_MESSAGE);
-            } else if (e.getSource() == viewHotels) {
+            } else if (e.getSource() == checkPackage) {
                 // Get selected destination
                 String selectedDestination = (String) destination.getSelectedItem();
-                // // Get selected package type
-                // String selectedPackage = (String) packageType.getSelectedItem();
-                // // Get number of people
-                // int people = (int) peopleSpinner.getValue();
-                // // Get selected pickup point
-                // String selectedPickup = (String) pickup.getSelectedItem();
 
-                // Open Hotels Page
+                // Get selected package type
+                String selectedPackage = (String) packageType.getSelectedItem();
+
+                // Get number of people
+                int people = (int) peopleSpinner.getValue();
+
+                // Get selected pickup point
+                String selectedPickup = (String) pickup.getSelectedItem();
+
+                // Open Package Page
                 this.setVisible(false);
-                new HotelsPage(selectedDestination, userName);
+                new PackagePage(userName, selectedDestination, selectedPackage, people, selectedPickup);
 
+            } else if (e.getSource() == updateProfile) {
+                // Open Update Details Page
+                new UpdateDetails(userName).isAlwaysOnTop();
+            } else if (e.getSource() == viewBookings) {
+                // Open View Bookings Page
+                new ViewBookings(userName).isAlwaysOnTop();
             }
         } catch (Exception e1) {
             e1.printStackTrace();
@@ -317,8 +328,8 @@ public class HomePage extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        //HomePage home = new HomePage("Aishu");
-        //home.setVisible(true);
+        HomePage home = new HomePage("k_15");
+        home.setVisible(true);
 
     }
 

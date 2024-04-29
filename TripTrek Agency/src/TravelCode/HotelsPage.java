@@ -4,22 +4,41 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.util.Date;
 import java.util.TimeZone;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import com.toedter.calendar.JDateChooser;
 
 public class HotelsPage extends JFrame implements ActionListener {
-    JButton back;
     private JPanel contentPane;
-    String name;
-    String userName;
+    JButton back, checkPriceBt, confirmBooking;
+    String name, userName, destination, selectedPackage, selectedPickUp;
+    int people, singleBedCount, doubleBedCount, days;
+    JComboBox<String> hotelList;
+    JDateChooser checkInField;
+    JTextField checkOutField;
+    ButtonGroup roomTypeGroup, acGroup, foodGroup;
+    JRadioButton singleBed, doubleBed, ac, nonAc, food, noFood;
+    float acPrice = 0, foodPrice = 0;
+    long checkInTime, checkOutTime;
+    String roomType, acType, foodType;
+    int bookingId;
 
-    HotelsPage(String destination, String userNameFromLogin) {
+    HotelsPage(String userNameFromLogin, String destinationFromHomepg, int daysFromPackage,
+            String selectedPackageFromHome, int peopleFromHomePg, String selectedPickUpFromHomePg) {
         userName = userNameFromLogin;
+        destination = destinationFromHomepg;
+        days = daysFromPackage;
+        selectedPackage = selectedPackageFromHome;
+        people = peopleFromHomePg;
+        selectedPickUp = selectedPickUpFromHomePg;
+
         try {
             Connectivity conn = new Connectivity();
             String query = "SELECT * FROM Account WHERE username = '" + userName + "' ";
@@ -28,7 +47,6 @@ public class HotelsPage extends JFrame implements ActionListener {
             rs.next();
             name = rs.getString("name");
         } catch (SQLException e) {
-            // Handle the exception
             e.printStackTrace();
         }
 
@@ -214,21 +232,21 @@ public class HotelsPage extends JFrame implements ActionListener {
         if (destination.equals("Wayanad, Kerala")) {
             // Add a dropdown menu for selecting hotel
             String[] hotels = { "Jungle Bay Resort", "Morickap Resort", "Vyna Hillock Resort" };
-            JComboBox<String> hotelList = new JComboBox<>(hotels);
+            hotelList = new JComboBox<>(hotels);
             hotelList.setFont(new Font("Georgia", Font.PLAIN, 16));
             hotelList.setBounds(230, 50, 200, 30);
             panel.add(hotelList);
         } else if (destination.equals("Gokarna, Karnataka")) {
             // Add a dropdown menu for selecting hotel
             String[] hotels = { "Samruddhi Resort", "Arthigamya Hotels", "Stone Wood Resort" };
-            JComboBox<String> hotelList = new JComboBox<>(hotels);
+            hotelList = new JComboBox<>(hotels);
             hotelList.setFont(new Font("Georgia", Font.PLAIN, 16));
             hotelList.setBounds(230, 50, 200, 30);
             panel.add(hotelList);
         } else {
             // Add a dropdown menu for selecting hotel
             String[] hotels = { "Venice Premium Houseboat", "Abad Turtle Beach Resort", "Sterling Lake Palace" };
-            JComboBox<String> hotelList = new JComboBox<>(hotels);
+            hotelList = new JComboBox<>(hotels);
             hotelList.setFont(new Font("Georgia", Font.PLAIN, 16));
             hotelList.setBounds(230, 50, 200, 30);
             panel.add(hotelList);
@@ -249,8 +267,9 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(checkInDate);
 
         // Add check-in date field
-        JDateChooser checkInField = new JDateChooser();
+        checkInField = new JDateChooser();
         checkInField.setBounds(230, 100, 200, 30);
+        checkInField.setMinSelectableDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
         panel.add(checkInField);
 
         // Add check-out date icon
@@ -267,10 +286,28 @@ public class HotelsPage extends JFrame implements ActionListener {
         checkOutDate.setBounds(80, 150, 200, 30);
         panel.add(checkOutDate);
 
-        // Add check-out date field
-        JDateChooser checkOutField = new JDateChooser();
+        // Add a check-out date field
+        checkOutField = new JTextField();
         checkOutField.setBounds(230, 150, 200, 30);
+        checkOutField.setForeground(Color.BLACK);
+        checkOutField.setBackground(Color.WHITE);
+        checkOutField.setBorder(new LineBorder(Color.BLACK, 1));
+        checkOutField.setEditable(false);
         panel.add(checkOutField);
+
+        // Add listener to check-in field
+        checkInField.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (checkInField.getDate() != null) {
+
+                    // Calculate check-out date based on check-in date and number of days
+                    checkInTime = checkInField.getDate().getTime();
+                    checkOutTime = checkInTime + (days * 24 * 60 * 60 * 1000); // milliseconds
+                    checkOutField.setText(SimpleDateFormat.getDateInstance().format(new Date(checkOutTime)));
+                }
+            }
+        });
 
         // Add room type icon
         ImageIcon roomTypeIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/roomTypeIcon.png"));
@@ -281,38 +318,25 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(roomTypeImgLabel);
 
         // Room type label
-        JLabel roomType = new JLabel("Room Type");
+        JLabel roomType = new JLabel("Room Type : ");
         roomType.setFont(new Font("Georgia", Font.BOLD, 16));
         roomType.setBounds(80, 200, 200, 30);
         panel.add(roomType);
 
-        // No. of rooms label
-        JLabel noOfRooms = new JLabel("No. of Rooms");
-        noOfRooms.setFont(new Font("Georgia", Font.BOLD, 16));
-        noOfRooms.setBounds(300, 200, 200, 30);
-        panel.add(noOfRooms);
+        // Add a radio button for selecting room type
+        singleBed = new JRadioButton("Single Bed Room");
+        singleBed.setFont(new Font("Georgia", Font.BOLD, 16));
+        singleBed.setBounds(120, 240, 200, 30);
+        panel.add(singleBed);
 
-        // Single bed room label
-        JLabel singleBedRoom = new JLabel("\u2022 Single Bed Room");
-        singleBedRoom.setFont(new Font("Georgia", Font.BOLD, 16));
-        singleBedRoom.setBounds(80, 240, 200, 30);
-        panel.add(singleBedRoom);
+        doubleBed = new JRadioButton("Double Bed Room");
+        doubleBed.setFont(new Font("Georgia", Font.BOLD, 16));
+        doubleBed.setBounds(120, 280, 200, 30);
+        panel.add(doubleBed);
 
-        // Add single bed room field
-        JTextField singleBedField = new JTextField();
-        singleBedField.setBounds(330, 240, 50, 30);
-        panel.add(singleBedField);
-
-        // Double bed room label
-        JLabel doubleBedRoom = new JLabel("\u2022 Double Bed Room");
-        doubleBedRoom.setFont(new Font("Georgia", Font.BOLD, 16));
-        doubleBedRoom.setBounds(80, 280, 200, 30);
-        panel.add(doubleBedRoom);
-
-        // Add double bed room field
-        JTextField doubleBedField = new JTextField();
-        doubleBedField.setBounds(330, 280, 50, 30);
-        panel.add(doubleBedField);
+        roomTypeGroup = new ButtonGroup();
+        roomTypeGroup.add(singleBed);
+        roomTypeGroup.add(doubleBed);
 
         // Add AC/Non AC icon
         ImageIcon acIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/acIcon.png"));
@@ -329,17 +353,17 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(acLabel);
 
         // Add a radio button for selecting AC/Non AC
-        JRadioButton ac = new JRadioButton("AC");
+        ac = new JRadioButton("AC");
         ac.setFont(new Font("Georgia", Font.BOLD, 16));
         ac.setBounds(230, 330, 100, 30);
         panel.add(ac);
 
-        JRadioButton nonAc = new JRadioButton("Non AC");
+        nonAc = new JRadioButton("Non AC");
         nonAc.setFont(new Font("Georgia", Font.BOLD, 16));
         nonAc.setBounds(330, 330, 100, 30);
         panel.add(nonAc);
 
-        ButtonGroup acGroup = new ButtonGroup();
+        acGroup = new ButtonGroup();
         acGroup.add(ac);
         acGroup.add(nonAc);
 
@@ -358,35 +382,32 @@ public class HotelsPage extends JFrame implements ActionListener {
         panel.add(foodLabel);
 
         // Add a radio button for selecting food
-        JRadioButton food = new JRadioButton("Yes");
+        food = new JRadioButton("Yes");
         food.setFont(new Font("Georgia", Font.BOLD, 16));
         food.setBounds(230, 380, 100, 30);
         panel.add(food);
 
-        JRadioButton noFood = new JRadioButton("No");
+        noFood = new JRadioButton("No");
         noFood.setFont(new Font("Georgia", Font.BOLD, 16));
         noFood.setBounds(330, 380, 100, 30);
         panel.add(noFood);
 
-        ButtonGroup foodGroup = new ButtonGroup();
+        foodGroup = new ButtonGroup();
         foodGroup.add(food);
         foodGroup.add(noFood);
 
-        // Add a book button
-        JButton book = new JButton("Book");
-        book.setFont(new Font("Georgia", Font.BOLD, 16));
-        book.setBounds(200, 430, 100, 30);
-        book.setBackground(new Color(32, 178, 170));
-        panel.add(book);
+        // Add a check price button
+        checkPriceBt = new JButton("Check Price");
+        checkPriceBt.setFont(new Font("Georgia", Font.BOLD, 16));
+        checkPriceBt.setBounds(200, 430, 150, 30);
+        checkPriceBt.setBackground(new Color(32, 178, 170));
+        checkPriceBt.setForeground(Color.BLACK);
+        checkPriceBt.addActionListener(this);
+        panel.add(checkPriceBt);
 
         contentPane.add(panel);
 
         this.setVisible(true);
-
-    }
-
-    public static void main(String[] args) {
-        //new HotelsPage("Gokarna, Karnataka", "Aishu");
 
     }
 
@@ -395,12 +416,247 @@ public class HotelsPage extends JFrame implements ActionListener {
         try {
             if (e.getSource() == back) {
                 this.setVisible(false);
-                new HomePage(userName);
+                new PackagePage(userName, destination, selectedPackage, people, selectedPickUp);
+            } else if (e.getSource() == checkPriceBt) {
+
+                // Check if check-in date is selected
+                if (checkInField.getDate() == null) {
+                    JOptionPane.showMessageDialog(this, "Please select check-in date !", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Check if room type is selected
+                if (!singleBed.isSelected() && !doubleBed.isSelected()) {
+                    JOptionPane.showMessageDialog(this, "Please select room type !", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Check if ac is selected
+                if (!ac.isSelected() && !nonAc.isSelected()) {
+                    JOptionPane.showMessageDialog(this, "Please select AC/Non AC !", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Check if food is selected
+                if (!food.isSelected() && !noFood.isSelected()) {
+                    JOptionPane.showMessageDialog(this, "Please select food !", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Get the selected hotel
+                String selectedHotel = hotelList.getSelectedItem().toString();
+
+                Connectivity conn = new Connectivity();
+                String query = "SELECT * FROM Hotels_available WHERE hotel = '" + selectedHotel + "' ";
+                ResultSet rs = conn.s.executeQuery(query);
+                if (rs.next() == false) {
+                    JOptionPane.showMessageDialog(this, "Hotel not available");
+                    return;
+                }
+
+                if (singleBed.isSelected()) {
+                    singleBedCount = people;
+                    doubleBedCount = 0;
+                    roomType = "Single Bed";
+                } else if (doubleBed.isSelected()) {
+                    singleBedCount = 0;
+                    doubleBedCount = people / 2;
+                    roomType = "Double Bed";
+                }
+
+                float singleBedPrice = rs.getFloat("single_bed_cost") * singleBedCount * days;
+                float doubleBedPrice = rs.getFloat("double_bed_cost") * doubleBedCount * days;
+
+                // Check if ac is selected
+                if (ac.isSelected()) {
+                    acPrice = rs.getFloat("ac_cost") * days;
+                    acType = "AC";
+                } else {
+                    acPrice = 0;
+                    acType = "Non AC";
+                }
+
+                // Check if food is selected
+                if (food.isSelected()) {
+                    foodPrice = rs.getFloat("food_cost") * days;
+                    foodType = "Yes";
+                } else {
+                    foodPrice = 0;
+                    foodType = "No";
+                }
+
+                float packagePrice = 0;
+
+                if (selectedPackage.equals("Gold")) {
+                    packagePrice = 10000;
+
+                } else if (selectedPackage.equals("Silver")) {
+                    packagePrice = 8000;
+
+                } else {
+                    packagePrice = 5000;
+                }
+
+                float totalPrice = packagePrice + singleBedPrice + doubleBedPrice + acPrice + foodPrice;
+
+                // Display the price in a new frame
+                JFrame priceFrame = new JFrame();
+                priceFrame.setSize(500, 550);
+                priceFrame.setTitle("Confirm booking");
+                priceFrame.setLayout(null);
+                priceFrame.setLocationRelativeTo(null);
+                priceFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+                JLabel txt = new JLabel("Please confirm the booking details");
+                txt.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                txt.setBounds(50, 10, 400, 30);
+                priceFrame.add(txt);
+
+                JLabel hotelLabel = new JLabel("\u2022  Hotel: " + selectedHotel);
+                hotelLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                ;
+                hotelLabel.setBounds(50, 50, 400, 30);
+                priceFrame.add(hotelLabel);
+
+                JLabel checkInLabel = new JLabel(
+                        "\u2022  Check-in Date: " + SimpleDateFormat.getDateInstance().format(checkInTime));
+                checkInLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                checkInLabel.setBounds(50, 90, 400, 30);
+                priceFrame.add(checkInLabel);
+
+                JLabel checkOutLabel = new JLabel(
+                        "\u2022  Check-out Date: " + SimpleDateFormat.getDateInstance().format(checkOutTime));
+                checkOutLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                checkOutLabel.setBounds(50, 130, 400, 30);
+                priceFrame.add(checkOutLabel);
+
+                JLabel singleBedPriceLabel = new JLabel(
+                        "\u2022  Single Bed Room Price: " + singleBedPrice);
+                singleBedPriceLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                singleBedPriceLabel.setBounds(50, 170, 440, 30);
+                priceFrame.add(singleBedPriceLabel);
+
+                JLabel doubleBedPriceLabel = new JLabel(
+                        "\u2022  Double Bed Room Price: " + doubleBedPrice);
+                doubleBedPriceLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                doubleBedPriceLabel.setBounds(50, 210, 440, 30);
+                priceFrame.add(doubleBedPriceLabel);
+
+                if (!ac.isSelected()) {
+                    JLabel acLabel = new JLabel("\u2022  AC Price: 0.0 ");
+                    acLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                    acLabel.setBounds(50, 250, 200, 30);
+                    priceFrame.add(acLabel);
+                } else {
+                    JLabel acLabel = new JLabel(
+                            "\u2022  AC Price: " + acPrice);
+                    acLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                    acLabel.setBounds(50, 250, 400, 30);
+                    priceFrame.add(acLabel);
+
+                }
+
+                if (!food.isSelected()) {
+                    JLabel foodLabel = new JLabel("\u2022  Food Price: 0.0 ");
+                    foodLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                    foodLabel.setBounds(50, 290, 200, 30);
+                    priceFrame.add(foodLabel);
+
+                } else {
+                    JLabel foodLabel = new JLabel("\u2022  Food Price: " + foodPrice);
+                    foodLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                    foodLabel.setBounds(50, 290, 400, 30);
+                    priceFrame.add(foodLabel);
+
+                }
+
+                JLabel packageLabel = new JLabel("\u2022  Package Price: " + packagePrice);
+                packageLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                packageLabel.setBounds(50, 330, 400, 30);
+                priceFrame.add(packageLabel);
+
+                JLabel totalPriceLabel = new JLabel(
+                        "  Total Price: " + totalPrice);
+                totalPriceLabel.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                totalPriceLabel.setBounds(150, 380, 170, 30);
+                Border border = new LineBorder(Color.BLACK, 2);
+                totalPriceLabel.setBorder(border);
+
+                priceFrame.add(totalPriceLabel);
+
+                // Add back button
+                JButton back = new JButton("Back");
+                back.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                back.setBounds(45, 450, 200, 30);
+                back.setBackground(new Color(32, 178, 170));
+                back.setForeground(Color.BLACK);
+                back.addActionListener((ActionEvent e1) -> {
+                    priceFrame.setVisible(false);
+                });
+                priceFrame.add(back);
+
+                // Add confirm booking button
+                JButton confirmBooking = new JButton("Confirm Booking");
+                confirmBooking.setFont(new Font("Times New Roman", Font.BOLD, 16));
+                confirmBooking.setBounds(270, 450, 200, 30);
+                confirmBooking.setBackground(new Color(32, 178, 170));
+                confirmBooking.setForeground(Color.BLACK);
+                confirmBooking.addActionListener((ActionEvent e1) -> {
+                    // Store the booking details in the database
+                    try {
+                        Connectivity conn1 = new Connectivity();
+                        String query1 = "INSERT INTO Bookings (username, destination, pickup_point, package_type, no_of_people, no_of_days, hotel, check_in_date, check_out_date, room_type, ac_type, food, total_price) VALUES ('"
+                                + userName + "', '" + destination + "', '" + selectedPickUp + "', '" + selectedPackage
+                                + "', " + people + ", " + days + ", '" + selectedHotel + "', '"
+                                + SimpleDateFormat.getDateInstance().format(checkInTime) + "', '"
+                                + SimpleDateFormat.getDateInstance().format(checkOutTime) + "', '"
+                                + roomType + "', '" + acType + "', '" + foodType + "', "
+                                + totalPrice + ")";
+                        conn1.s.executeUpdate(query1);
+
+                        // Get the booking id
+                        String query2 = "SELECT booking_id FROM Bookings WHERE username = '" + userName
+                                + "' AND destination = '" + destination + "' AND pickup_point = '" + selectedPickUp
+                                + "' AND package_type = '" + selectedPackage + "' AND no_of_people = " + people
+                                + " AND no_of_days = " + days + " AND hotel = '" + selectedHotel
+                                + "' AND check_in_date = '" + SimpleDateFormat.getDateInstance().format(checkInTime)
+                                + "' AND check_out_date = '" + SimpleDateFormat.getDateInstance().format(checkOutTime)
+                                + "' AND room_type = '" + roomType + "' AND ac_type = '" + acType + "' AND food = '"
+                                + foodType + "' AND total_price = " + totalPrice + " ";
+                        ResultSet rs1 = conn1.s.executeQuery(query2);
+                        rs1.next();
+                        bookingId = rs1.getInt("booking_id");
+
+
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    priceFrame.setVisible(false);
+                    JOptionPane.showMessageDialog(this, "Booking successful !\nBooking ID: " + bookingId,
+                            "Booking Successful", JOptionPane.INFORMATION_MESSAGE);
+
+                    this.setVisible(false);
+                    new HomePage(userName);
+                });
+                priceFrame.add(confirmBooking);
+
+                priceFrame.setVisible(true);
+
             }
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+    }
+
+    public static void main(String[] args) {
+        new HotelsPage("sarah26", "Gokarna, Karnataka", 3, "Silver", 6, "Airport");
+
     }
 
 }
