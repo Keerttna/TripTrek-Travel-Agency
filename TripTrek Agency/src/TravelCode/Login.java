@@ -57,7 +57,7 @@ public class Login extends JFrame implements ActionListener {
         loginBt.setFont(new Font("Georgia", Font.PLAIN, 20));
         loginBt.setForeground(Color.BLACK);
         loginBt.setBackground(Color.white);
-        loginBt.setBounds(520, 340, 100, 30);
+        loginBt.setBounds(670, 340, 100, 30);
         loginBt.addActionListener(this);
         add(loginBt);
 
@@ -66,7 +66,7 @@ public class Login extends JFrame implements ActionListener {
         clearBt.setFont(new Font("Georgia", Font.PLAIN, 20));
         clearBt.setForeground(Color.BLACK);
         clearBt.setBackground(Color.white);
-        clearBt.setBounds(670, 340, 100, 30);
+        clearBt.setBounds(520, 340, 100, 30);
         clearBt.addActionListener(this);
         add(clearBt);
 
@@ -115,7 +115,7 @@ public class Login extends JFrame implements ActionListener {
                         String enteredPassword = new String(enteredPasswordChars);
                         if (storedPassword.equals(enteredPassword)) {
                             this.setVisible(false);
-                            
+
                             // Open the homepage
                             new HomePage(userField.getText());
 
