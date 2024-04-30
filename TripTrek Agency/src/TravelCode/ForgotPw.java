@@ -118,7 +118,7 @@ public class ForgotPw extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
                 return;
             }
-
+            
             // Insert the new user into the database
             try {
                 Connectivity c = new Connectivity();
@@ -134,14 +134,26 @@ public class ForgotPw extends JFrame implements ActionListener {
                         this.setVisible(false);
                         String updatePw = JOptionPane.showInputDialog("Enter new password");
 
-                        // Update the password
+                        //Password must be 4 characters and should not contain spaces
+                        if (updatePw.length() != 4) {
+                            JOptionPane.showMessageDialog(null, "Password must be 4 characters long!");
+                            return;
+                        } else if (updatePw.contains(" ")) {
+                            JOptionPane.showMessageDialog(null, "Password should not contain spaces!");
+                            return;
+                        } else {
+                            // Update the password
                         String updateQuery = "UPDATE Account SET password = '" + updatePw + "' WHERE username = '"
-                                + username + "'";
-                        c.s.executeUpdate(updateQuery);
+                        + username + "'";
+                c.s.executeUpdate(updateQuery);
 
-                        JOptionPane.showMessageDialog(null, "Password Update Successful");
+                JOptionPane.showMessageDialog(null, "Password Update Successful");
 
-                        new Login();
+                new Login();
+
+                        }
+
+                        
                     } else {
                         JOptionPane.showMessageDialog(null, "Wrong answer!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
