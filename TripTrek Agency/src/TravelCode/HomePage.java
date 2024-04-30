@@ -12,7 +12,7 @@ import java.util.TimeZone;
 public class HomePage extends JFrame implements ActionListener {
     public JPanel contentPane;
     private JButton goldPackage, silverPackage, bronzePackage;
-    private JButton checkPackage, updateProfile, viewBookings;
+    private JButton checkPackage, updateProfile, viewBookings, aboutUs;
     private JSpinner peopleSpinner;
     private JComboBox<String> destination;
     private JComboBox<String> pickup;
@@ -72,9 +72,10 @@ public class HomePage extends JFrame implements ActionListener {
         header.add(dateLabel);
 
         // Add a about us button in header
-        JButton aboutUs = new JButton("About Us");
+        aboutUs = new JButton("About Us");
         aboutUs.setFont(new Font("Georgia", Font.BOLD, 14));
         aboutUs.setBounds(270, 60, 100, 30);
+        aboutUs.addActionListener(this);
         header.add(aboutUs);
 
         // Add profile icon in header
@@ -320,6 +321,8 @@ public class HomePage extends JFrame implements ActionListener {
             } else if (e.getSource() == viewBookings) {
                 // Open View Bookings Page
                 new ViewBookings(userName).isAlwaysOnTop();
+            } else if (e.getSource() == aboutUs) {
+                new AboutUsPage();
             }
         } catch (Exception e1) {
             e1.printStackTrace();

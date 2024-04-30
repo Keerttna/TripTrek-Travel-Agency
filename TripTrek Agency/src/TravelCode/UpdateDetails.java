@@ -25,7 +25,6 @@ public class UpdateDetails extends JFrame implements ActionListener {
         contentPane.setBackground(Color.WHITE);
         contentPane.setLayout(null);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // Update details icon
         ImageIcon updateIcon = new ImageIcon(ClassLoader.getSystemResource("Icons/updateIcon.png"));

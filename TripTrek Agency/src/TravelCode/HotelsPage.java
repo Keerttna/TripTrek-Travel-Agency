@@ -17,7 +17,7 @@ import com.toedter.calendar.JDateChooser;
 
 public class HotelsPage extends JFrame implements ActionListener {
     private JPanel contentPane;
-    JButton back, checkPriceBt, confirmBooking;
+    JButton back, checkPriceBt, confirmBooking, aboutUs;
     String name, userName, destination, selectedPackage, selectedPickUp;
     int people, singleBedCount, doubleBedCount, days;
     JComboBox<String> hotelList;
@@ -88,9 +88,10 @@ public class HotelsPage extends JFrame implements ActionListener {
         header.add(dateLabel);
 
         // Add a about us button in header
-        JButton aboutUs = new JButton("About Us");
+        aboutUs = new JButton("About Us");
         aboutUs.setFont(new Font("Georgia", Font.BOLD, 14));
         aboutUs.setBounds(270, 60, 100, 30);
+        aboutUs.addActionListener(this);
         header.add(aboutUs);
 
         // Add detination name in header
@@ -417,6 +418,8 @@ public class HotelsPage extends JFrame implements ActionListener {
             if (e.getSource() == back) {
                 this.setVisible(false);
                 new PackagePage(userName, destination, selectedPackage, people, selectedPickUp);
+            } else if (e.getSource() == aboutUs) {
+                new AboutUsPage();
             } else if (e.getSource() == checkPriceBt) {
 
                 // Check if check-in date is selected
@@ -629,7 +632,6 @@ public class HotelsPage extends JFrame implements ActionListener {
                         ResultSet rs1 = conn1.s.executeQuery(query2);
                         rs1.next();
                         bookingId = rs1.getInt("booking_id");
-
 
                     } catch (SQLException ex) {
                         ex.printStackTrace();
