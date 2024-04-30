@@ -93,7 +93,7 @@ public class Signup extends JFrame implements ActionListener {
         createBt = new JButton("Create");
         createBt.addActionListener(this);
         createBt.setFont(new Font("Tahoma", Font.BOLD, 13));
-        createBt.setBounds(140, 289, 100, 30);
+        createBt.setBounds(300, 289, 100, 30);
         createBt.setBackground(Color.BLACK);
         createBt.setForeground(Color.WHITE);
         contentPane.add(createBt);
@@ -101,7 +101,7 @@ public class Signup extends JFrame implements ActionListener {
         backBt = new JButton("Back");
         backBt.addActionListener(this);
         backBt.setFont(new Font("Tahoma", Font.BOLD, 13));
-        backBt.setBounds(300, 289, 100, 30);
+        backBt.setBounds(140, 289, 100, 30);
         backBt.setBackground(Color.BLACK);
         backBt.setForeground(Color.WHITE);
         contentPane.add(backBt);

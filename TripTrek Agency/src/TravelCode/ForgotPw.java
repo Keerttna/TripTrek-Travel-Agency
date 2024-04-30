@@ -83,7 +83,7 @@ public class ForgotPw extends JFrame implements ActionListener {
         submitBt = new JButton("Submit");
         submitBt.addActionListener(this);
         submitBt.setFont(new Font("Tahoma", Font.BOLD, 13));
-        submitBt.setBounds(140, 259, 100, 30);
+        submitBt.setBounds(300, 259, 100, 30);
         submitBt.setBackground(Color.BLACK);
         submitBt.setForeground(Color.WHITE);
         contentPane.add(submitBt);
@@ -91,7 +91,7 @@ public class ForgotPw extends JFrame implements ActionListener {
         backBt = new JButton("Back");
         backBt.addActionListener(this);
         backBt.setFont(new Font("Tahoma", Font.BOLD, 13));
-        backBt.setBounds(300, 259, 100, 30);
+        backBt.setBounds(140, 259, 100, 30);
         backBt.setBackground(Color.BLACK);
         backBt.setForeground(Color.WHITE);
         contentPane.add(backBt);
