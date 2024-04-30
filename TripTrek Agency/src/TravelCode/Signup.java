@@ -128,6 +128,15 @@ public class Signup extends JFrame implements ActionListener {
             if (name.equals("") || username.equals("") || password.equals("") || securityAns.equals("")) {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
                 return;
+            } else if (username.length() != 8) {
+                JOptionPane.showMessageDialog(null, "Username must be 6 characters long");
+                return;
+            } else if (password.length() != 4) {
+                JOptionPane.showMessageDialog(null, "Password must be 4 characters long");
+                return;
+            } else if (password.contains(" ")) {
+                JOptionPane.showMessageDialog(null, "Password should not contain spaces!");
+                return;
             }
 
             // Insert the new user into the database

@@ -78,9 +78,12 @@ public class UpdateDetails extends JFrame implements ActionListener {
         dobLabel.setBounds(99, 114, 105, 26);
         contentPane.add(dobLabel);
 
-        // Date of Birth field
+        // Date of Birth field - Minimum 18 years old
         dobField = new JDateChooser();
         dobField.setBounds(230, 114, 200, 26);
+        dobField.setMaxSelectableDate(new java.util.Date());
+        dobField.setBounds(230, 114, 200, 26);
+        dobField.setDateFormatString("dd-MM-yyyy");
         contentPane.add(dobField);
 
         // Phone no label
@@ -176,9 +179,19 @@ public class UpdateDetails extends JFrame implements ActionListener {
         String idNo = idNoField.getText();
 
         if (name.isEmpty() || dob.isEmpty() || phone.isEmpty() || email.isEmpty() || idNo.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please fill all the fields !");
+            JOptionPane.showMessageDialog(null, "Please fill all the fields!");
         } else if (!male.isSelected() && !female.isSelected()) {
             JOptionPane.showMessageDialog(null, "Please select your gender!");
+        } else if (phone.length() != 10) {
+            JOptionPane.showMessageDialog(null, "Please enter valid phone no.!");
+        } else if (!email.contains("@") || !email.contains(".")) {
+            JOptionPane.showMessageDialog(null, "Please enter valid email id!");
+        } else if (idType.equals("Passport") && idNo.length() != 8) {
+            JOptionPane.showMessageDialog(null, "Please enter valid Passport no.!");
+        } else if (idType.equals("Aadhar Card") && idNo.length() != 12) {
+            JOptionPane.showMessageDialog(null, "Please enter valid Aadhar Card no.!");
+        } else if (idType.equals("Voter ID") && idNo.length() != 10) {
+            JOptionPane.showMessageDialog(null, "Please enter valid Voter ID no.!");
         } else {
             try {
                 Connectivity conn = new Connectivity();
