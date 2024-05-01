@@ -15,17 +15,41 @@ TripTrek is a comprehensive travel management application developed using Java, 
 
 ## Screenshots
 
-![Login Screen](screenshots/login.png)
-*Login Screen*
+*Logo:*
 
-![Destination Selection](screenshots/destination.png)
-*Destination Selection*
+<img width="228" alt="image" src="https://github.com/Keerttna/TripTrek-Travel-Agency/assets/127674493/88666fb1-dddd-4d04-8615-40d5e64e5cf7"> 
 
-![Itinerary Selection](screenshots/itinerary.png)
-*Itinerary Selection*
+*Login Screen:*
 
-![Hotel Booking](screenshots/hotel.png)
-*Hotel Booking*
+<img width="401" alt="image" src="https://github.com/Keerttna/TripTrek-Travel-Agency/assets/127674493/39d080ef-31cf-409f-9d0f-a1a9cbdadd4e">
+
+*Sign up page:*
+
+<img width="398" alt="image" src="https://github.com/Keerttna/TripTrek-Travel-Agency/assets/127674493/fa5519e9-4436-4724-821e-3ae185abb6df">
+
+*Forgot password?*
+
+<img width="399" alt="image" src="https://github.com/Keerttna/TripTrek-Travel-Agency/assets/127674493/719cc227-d830-422c-bdac-c878d06aca50">
+
+*Destination Selection:*
+
+<img width="397" alt="image" src="https://github.com/Keerttna/TripTrek-Travel-Agency/assets/127674493/dfa5c59d-974c-48f6-9a95-21ffea1cda6b">
+
+*Itinerary Selection:*
+
+<img width="406" alt="image" src="https://github.com/Keerttna/TripTrek-Travel-Agency/assets/127674493/3207150f-eec6-4d05-bbd8-3513542173f4">
+
+*Hotel Booking:*
+
+<img width="392" alt="image" src="https://github.com/Keerttna/TripTrek-Travel-Agency/assets/127674493/8652c31f-3b9e-40b0-8b39-99956b4e6b12">
+
+*Price confirmation screen:*
+
+<img width="271" alt="image" src="https://github.com/Keerttna/TripTrek-Travel-Agency/assets/127674493/221c7ece-fa04-4809-9151-3a8ba0c76659">
+
+*Confirmation Message:*
+
+<img width="415" alt="image" src="https://github.com/Keerttna/TripTrek-Travel-Agency/assets/127674493/522b8df0-1ec6-48d1-b5fc-90c645f9b86e">
 
 ## Getting Started
 
