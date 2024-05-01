@@ -51,7 +51,7 @@ TripTrek is a comprehensive travel management application developed using Java, 
 ## Contributors
 
 - [Keerttna](https://github.com/Keerttna)
-- [Another Contributor](https://github.com/anotherusername)
+- [Saranya Purushothaman](https://github.com/Saranya-Purushothaman)
 
 ## License
 
