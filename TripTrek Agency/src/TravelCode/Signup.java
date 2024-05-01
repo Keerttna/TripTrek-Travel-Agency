@@ -129,7 +129,7 @@ public class Signup extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Please fill all the fields");
                 return;
             } else if (username.length() != 8) {
-                JOptionPane.showMessageDialog(null, "Username must be 6 characters long");
+                JOptionPane.showMessageDialog(null, "Username must be 8 characters long");
                 return;
             } else if (password.length() != 4) {
                 JOptionPane.showMessageDialog(null, "Password must be 4 characters long");
