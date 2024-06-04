@@ -27,7 +27,7 @@ TripTrek is a comprehensive travel management application developed using Java, 
 
 <img width="398" alt="image" src="https://github.com/Keerttna/TripTrek-Travel-Agency/assets/127674493/fa5519e9-4436-4724-821e-3ae185abb6df">
 
-*Forgot password?*
+*Forgot password:*
 
 <img width="399" alt="image" src="https://github.com/Keerttna/TripTrek-Travel-Agency/assets/127674493/719cc227-d830-422c-bdac-c878d06aca50">
 
@@ -55,20 +55,6 @@ TripTrek is a comprehensive travel management application developed using Java, 
 
 ![Screenshot 2024-05-01 153810](https://github.com/Keerttna/TripTrek-Travel-Agency/assets/127674493/ff59c17f-b05c-44d4-8398-68456101d84b)
 
-
-## Getting Started
-
-1. Clone the repository:
-
-   ```
-   git clone https://github.com/Keerttna/TripTrek-Travel-Agency.git
-   ```
-
-2. Import the project into your preferred IDE (Eclipse, IntelliJ, etc.).
-
-3. Set up MySQL database and update the JDBC connection details in the code.
-
-4. Run the application and start exploring!
 
 ## Technologies Used
 
